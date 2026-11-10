@@ -1,322 +1,912 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>파이썬 프로그래밍 실습 시스템</title>
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --success-color: #2ec4b6;
-            --danger-color: #e71d36;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); padding: 20px; line-height: 1.6; }
-        .container { max-width: 1000px; margin: 0 auto; background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        header { border-bottom: 2px solid #eef2f5; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
-        h1 { font-size: 24px; color: #2c3e50; }
-        .student-info { display: flex; gap: 15px; background: #eef2f5; padding: 15px; border-radius: 8px; margin-bottom: 25px; }
-        .student-info input { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        .student-info input[type="text"] { width: 150px; }
-        .navigation { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #f1f3f5; padding: 10px; border-radius: 6px; }
-        .nav-btn { background: var(--primary-color); color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .nav-btn:disabled { background: #ccc; cursor: not-allowed; }
-        #question-select { padding: 6px; border-radius: 4px; border: 1px solid #ccc; max-width: 60%; }
-        .mission-card { border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin-bottom: 25px; background: #fff; }
-        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; margin-bottom: 10px; }
-        .badge.기초 { background-color: #2ecc71; }
-        .badge.중급 { background-color: #f1c40f; }
-        .badge.고급 { background-color: #e74c3c; }
-        .section-title { font-size: 16px; font-weight: bold; margin: 15px 0 5px 0; color: #34495e; border-left: 4px solid var(--primary-color); padding-left: 8px; }
-        .text-box { background: #f8f9fa; padding: 12px; border-radius: 6px; font-size: 14px; border: 1px dashed #ced4da; white-space: pre-wrap; }
-        .steps-list { padding-left: 20px; font-size: 14px; }
-        .editor-section { margin-bottom: 25px; }
-        textarea { width: 100%; height: 200px; font-family: 'Courier New', Courier, monospace; font-size: 15px; padding: 15px; border: 2px solid #ced4da; border-radius: 8px; resize: vertical; outline: none; transition: border-color 0.3s; }
-        textarea:focus { border-color: var(--primary-color); }
-        .status-bar { display: flex; justify-content: space-between; align-items: center; background: #e8f4fd; padding: 12px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; }
-        .status-badge { font-weight: bold; padding: 4px 8px; border-radius: 4px; }
-        .status-badge.complete { background: #d9f2e3; color: #1e7e34; }
-        .status-badge.incomplete { background: #fde2e2; color: #bd2130; }
-        .action-buttons { display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
-        .btn:active { opacity: 0.8; }
-        .btn-submit { background-color: var(--success-color); color: white; }
-        .btn-clear { background-color: #6c757d; color: white; }
-        .btn-refresh { background-color: #17a2b8; color: white; }
-        .admin-toggle { background: #343a40; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .admin-panel { display: none; margin-top: 30px; border-top: 2px dashed #ccc; padding-top: 20px; }
-        .admin-panel input[type="text"] { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>아두이노 리치쉴드 실습</title>
+<style>
+:root{
+  --bg:#f4f7fb;--card:#fff;--ink:#1d2433;--sub:#5b6577;--line:#e1e7f0;
+  --primary:#2f6fed;--primary-d:#1f56c4;--ok:#1f9d63;--warn:#e8890c;--bad:#d64545;
+  --teal:#0fa3a3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto;overflow-anchor:none}
+body{margin:0;font-family:"Pretendard","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+header{background:linear-gradient(120deg,#1f3fa8,#2f6fed 55%,#0fa3a3);color:#fff;padding:14px 20px}
+.wrap{max-width:none;width:100%;margin:0 auto;padding:0 20px}
+header .wrap{display:flex;flex-direction:column;gap:10px}
+.hrow{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.htext{display:flex;flex-direction:column;gap:8px;min-width:0;flex:1 1 300px}
+.hright{margin-left:auto;display:flex;align-items:center;gap:10px}
+.gear{width:40px;height:40px;padding:0;border-radius:50%;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.5);color:#fff;display:flex;align-items:center;justify-content:center}
+.gear:hover{background:rgba(255,255,255,.32)}
+header h1{margin:0;font-size:1.35rem}
+.status{font-size:.85rem;background:rgba(255,255,255,.18);padding:4px 12px;border-radius:99px}
+.status.on{background:rgba(31,157,99,.9)}
+.led{display:grid;grid-template-columns:repeat(5,10px);gap:3px;padding:8px;background:#0d1526;border-radius:8px}
+.led i{width:10px;height:10px;border-radius:50%;background:#2a3550;display:block}
+.led i.on{background:#ff4d4d;box-shadow:0 0 6px #ff4d4d}
+.brand small{display:block;opacity:.85;font-size:.75rem}
+.stu{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.submitbtn{background:#fff;color:#1f3fa8;border:0;font-weight:700;padding:8px 14px;border-radius:9px;white-space:nowrap}
+.submitbtn:hover{background:#eef3ff}
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1200;max-width:min(92vw,640px);padding:12px 18px;border-radius:12px;font-weight:600;box-shadow:0 6px 24px rgba(20,40,80,.25);background:#1d2433;color:#fff}
+.toast.ok{background:#146c43}
+.toast.bad{background:#9f2d2d}
+header .stu input[type=text]{width:110px;background:rgba(255,255,255,.95);border:1px solid rgba(255,255,255,.6);padding:7px 10px}
+.qnav{background:#fff;border-bottom:1px solid var(--line);padding:8px 0}
+.qnav .chips{margin:0}
+.badges{display:flex;flex-wrap:wrap;gap:6px;max-width:620px}
+.badge{width:30px;height:30px;padding:0;border-radius:50%;border:2px solid rgba(255,255,255,.95);background:#e5484d;color:#fff;font-size:.78rem;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .25s,transform .15s}
+.badge:hover{background:#e5484d;transform:scale(1.1)}
+.badge.done{background:#1fb26b}
+.badge.done:hover{background:#1fb26b}
+.badge.cur{box-shadow:0 0 0 3px rgba(255,255,255,.55)}
+main{padding:24px 0 60px}
+h2{font-size:1.15rem;margin:0 0 6px}
+h3{font-size:1rem;margin:0 0 6px}
+.muted{color:var(--sub);font-size:.88rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 1px 3px rgba(20,40,80,.05)}
+.grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:start}
+.top{display:grid;gap:16px;grid-template-columns:minmax(0,1fr) minmax(0,2fr);align-items:stretch;margin-bottom:16px}
+.top .card{margin-bottom:0}
+@media(max-width:980px){.top{grid-template-columns:1fr}}
+.grid>div{min-width:0}
+.grid>div:last-child{position:sticky;top:12px}
+@media(max-width:980px){.grid{grid-template-columns:1fr}.grid>div:last-child{position:static}}
+.progress{height:12px;background:#e7edf7;border-radius:99px;overflow:hidden;margin:8px 0}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--teal));transition:width .4s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.stat{background:#f1f5fc;border-radius:10px;padding:10px;text-align:center;font-size:.82rem;color:var(--sub)}
+.stat b{display:block;font-size:1.4rem;color:var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button,.btn{font:inherit;border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 14px;border-radius:9px;cursor:pointer}
+button:hover{background:#f1f5fc}
+button.primary{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+button.primary:hover{background:var(--primary-d)}
+button.danger{color:var(--bad);border-color:#f0c6c6}
+button:disabled{opacity:.5;cursor:not-allowed}
+label{display:block;font-size:.85rem;font-weight:600;margin:8px 0 4px}
+input[type=text],input[type=password],textarea{width:100%;font:inherit;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff}
+textarea{font-family:ui-monospace,Consolas,monospace;font-size:.85rem;min-height:220px;resize:vertical}
+.chips{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin:8px 0}
+@media(max-width:1100px){.chips{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.chips{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.chip{padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:.78rem;line-height:1.3;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chip.done{border-color:var(--ok)}
+.chip.done::after{content:" ✔";color:var(--ok)}
+.chip.active.done::after{color:#fff}
+.level{font-size:.72rem;padding:2px 8px;border-radius:99px;background:#e8f0ff;color:var(--primary);margin-left:6px}
+.mission{background:#fff9ec;border:1px solid #f3e0b0;border-radius:12px;padding:14px}
+.mission h3{color:#9a6200}
+.mission ol{margin:6px 0 0 18px;padding:0}
+.checks{list-style:none;margin:10px 0 0;padding:0}
+.checks li{padding:6px 10px;border-radius:8px;margin-bottom:5px;background:#f6f8fc;font-size:.88rem}
+.checks li.pass{background:#e6f6ee;color:#146c43}
+.checks li.fail{background:#fdeaea;color:#9f2d2d}
+.result{margin-top:10px;padding:12px;border-radius:10px;font-weight:600;display:none}
+.result.pass{display:block;background:#e6f6ee;color:#146c43}
+.result.fail{display:block;background:#fdeaea;color:#9f2d2d}
+.sim{width:100%;height:calc(100vh - 230px);min-height:560px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.note{font-size:.8rem;color:var(--sub);margin-top:8px}
+.teacher{border:1px dashed #b9c6e0;background:#f8faff}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:10px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:#f1f5fc}
+.tag-ok{color:var(--ok);font-weight:700}.tag-bad{color:var(--bad);font-weight:700}
+.hidden{display:none!important}
+/* 선생님 화면 */
+.tscreen{position:fixed;inset:0;z-index:1000;background:var(--bg);overflow:auto}
+.tbar{position:sticky;top:0;z-index:1;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 20px;background:#fff;border-bottom:1px solid var(--line)}
+.tbar h2{margin:0;flex:1;min-width:220px}
+.tbody{display:grid;grid-template-columns:minmax(220px,1fr) minmax(0,3fr);gap:16px;padding:16px 20px 60px}
+.tlist{display:flex;flex-direction:column;gap:6px}
+.tlist button{text-align:left;padding:8px 12px;font-size:.88rem}
+.tlist button.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.tlist button.mod::after{content:" ● 수정됨";font-size:.75rem;color:var(--warn)}
+.tlist button.active.mod::after{color:#ffe2b0}
+.tform{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;max-width:900px}
+.tscreen textarea{min-height:0;font-family:inherit;font-size:.92rem}
+.tscreen select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff}
+@media(max-width:820px){.tbody{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1 id="site-title">🐍 파이썬 프로그래밍 실습실</h1>
-        <button class="admin-toggle" onclick="toggleAdmin()">⚙ 선생님 화면</button>
-    </header>
-    <div class="student-info">
-        <input type="text" id="student-id" placeholder="학번 (예: 10101)" onchange="saveStudentContext()">
-        <input type="text" id="student-name" placeholder="이름 (예: 홍길동)" onchange="saveStudentContext()">
-        <span style="font-size: 12px; color: #666; align-self: center;">* 학번과 이름을 정확히 적어야 실습 결과가 기록됩니다.</span>
-    </div>
-    <div class="navigation">
-        <button class="nav-btn" id="btn-prev" onclick="moveQuestion(-1)">◀ 이전 문항</button>
-        <div>
-            <select id="question-select" onchange="selectQuestion(this.value)"></select>
+<header>
+  <div class="wrap">
+    <div class="hrow">
+      <div class="led" id="led" aria-hidden="true"></div>
+      <div class="htext">
+        <h1 id="siteTitle">아두이노 리치쉴드 실습</h1>
+        <div class="stu" aria-label="학생 정보">
+          <input type="text" id="stuId" placeholder="학번" aria-label="학번" autocomplete="off" inputmode="numeric">
+          <input type="text" id="stuName" placeholder="이름" aria-label="이름" autocomplete="off">
+          <div class="badges" id="badges" aria-label="문항별 통과 현황"></div>
+          <button id="btnSubmitResult" class="submitbtn" type="button">📤 결과 제출</button>
         </div>
-        <button class="nav-btn" id="btn-next" onclick="moveQuestion(1)">다음 문항 ▶</button>
+      </div>
+      <div class="hright">
+        <span class="status on" id="status">코드 붙여넣기 대기</span>
+        <button id="btnEdit" class="gear" type="button" title="선생님 설정" aria-label="선생님 설정">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        </button>
+      </div>
     </div>
-    <div class="mission-card">
-        <span id="mission-level" class="badge 기초">기초</span>
-        <h2 id="mission-title" style="font-size: 18px; margin-bottom: 15px;">문항 로딩 중...</h2>
-        <div class="section-title">🎯 미션 설명</div>
-        <div id="mission-desc" class="text-box">설명이 들어가는 자리입니다.</div>
-        <div class="section-title">📘 성취기준</div>
-        <div id="mission-standard" class="text-box" style="color: #555;">성취기준 정보</div>
-        <div class="section-title">🚀 성취 기대</div>
-        <div id="mission-expectation" class="text-box" style="color: #555;">성취 기대 효과</div>
-        <div class="section-title">📋 해결 순서</div>
-        <div class="text-box"><ul id="mission-steps" class="steps-list"></ul></div>
+  </div>
+</header>
+
+<nav class="qnav" aria-label="문항 선택">
+  <div class="wrap"><div class="chips" id="chips"></div></div>
+</nav>
+
+<main class="wrap">
+  <div class="grid">
+    <!-- 좌: 학생 정보 + 문항 -->
+    <div>
+      <section class="card">
+        <div class="mission">
+          <h3>🎯 미션 설명 <span class="level" id="qLevel"></span></h3>
+          <p id="qTitle" style="font-weight:700;margin:4px 0"></p>
+          <p id="qDesc" class="muted" style="margin:0 0 8px"></p>
+          <b>성취기준</b>
+          <p id="qStd" class="muted" style="margin:2px 0 8px"></p>
+          <b>성취 기대</b>
+          <p id="qExp" class="muted" style="margin:2px 0 8px"></p>
+          <b>해결 순서</b>
+          <ol id="qSteps"></ol>
+        </div>
+        <div class="row" style="margin-top:12px;justify-content:space-between">
+          <button id="btnPrev">◀ 이전 문항</button>
+          <button id="btnNext">다음 문항 ▶</button>
+        </div>
+        <div class="row" style="gap:18px;margin-top:12px">
+          <div class="stat" style="flex:1">이 문항 제출 횟수<b id="qTry">0회</b><span>제출할 때마다 누적돼요.</span></div>
+          <div class="stat" style="flex:1">완성까지<b id="qFirst">아직 미완성</b><span>처음 통과한 제출 횟수를 기록해요.</span></div>
+        </div>
+      </section>
     </div>
-    <div class="editor-section">
-        <div class="section-title">💻 파이썬 코드 작성 구역</div>
-        <textarea id="code-editor" placeholder="# 이곳에 파이썬 코드를 작성하세요.&#10;# 필수 명령어 블록 포함 여부를 검사합니다." oninput="trackDraft()"></textarea>
+
+    <!-- 우: 편집기 + 채점 -->
+    <div>
+      <section class="card">
+        <label for="codeBox" style="margin-top:0">✏️ 아두이노 코드 (IDE에서 작성한 스케치를 붙여넣으세요)</label>
+        <textarea id="codeBox" class="sim" spellcheck="false" style="font-family:ui-monospace,Consolas,monospace;font-size:.9rem;resize:vertical" placeholder="void setup() {
+}
+
+void loop() {
+}"></textarea>
+        <div class="row" style="margin-top:12px">
+          <button id="btnSubmit" class="primary">✔ 제출하고 자동 채점</button>
+          <button id="btnClearBlocks">🧹 코드 지우기</button>
+          <button id="btnReload">🌐 Wokwi 시뮬레이터 열기</button>
+        </div>
+        <p id="clearMsg" class="note" role="status"></p>
+        <p class="note">* 주석(//)을 뺀 실제 코드에 필요한 요소가 모두 들어 있는지 검사합니다. 핀 번호는 검사하지 않아요.</p>
+        <div class="result" id="result"></div>
+        <ul class="checks" id="checks"></ul>
+      </section>
     </div>
-    <div class="status-bar">
-        <div>이 문항 제출 횟수: <span id="submit-count" style="font-weight: bold; color: var(--primary-color);">0</span>회</div>
-        <div>완성 여부: <span id="completion-status" class="status-badge incomplete">아직 미완성</span></div>
-    </div>
-    <div class="action-buttons">
-        <button class="btn btn-submit" onclick="validateAndSubmit()">📤 제출하고 자동 채점</button>
-        <button class="btn btn-clear" onclick="clearEditor()">🧹 블록 모두 지우기</button>
-        <button class="btn btn-refresh" onclick="resetEditorToDefault()">⟳ 편집기 새로고침</button>
-    </div>
-    <div class="admin-panel" id="admin-panel">
-        <h3 style="margin-bottom: 10px; color: #2c3e50;">👩‍🏫 선생님 전용 서버 연동 설정</h3>
-        <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Apps Script 웹 앱 주소를 붙여넣고 아래 적용 버튼을 누르세요.</p>
-        <label style="font-weight: bold; font-size: 14px;">구글 앱스 스크립트 주소 (URL):</label>
-        <input type="text" id="web-app-url" placeholder="https://google.com">
-        <button class="nav-btn" onclick="saveAdminSettings()" style="background: #28a745;">🚀 학생 시스템에 주소 적용하기</button>
-    </div>
+  </div>
+</main>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+<!-- 선생님 화면: 미션 문구 편집 -->
+<div id="teacherScreen" class="tscreen hidden" role="dialog" aria-modal="true" aria-label="선생님 화면">
+  <div class="tbar">
+    <h2>👩‍🏫 선생님 화면 · 미션 문구 편집</h2>
+    <span id="tStatus" class="muted"></span>
+    <button id="tClose" class="primary">닫기 ✕</button>
+  </div>
+  <div class="tbody">
+    <aside class="tlist" id="tList" aria-label="문항 목록"></aside>
+    <section class="tform">
+      <p class="muted" style="margin-top:0">문구를 고친 뒤 <b>🚀 학생에게 적용하기</b>를 누르면 GitHub에 자동 저장돼요. 1~2분 뒤 학생들이 <b>F5</b>를 누르면 바뀐 문구가 보여요. (고치는 동안은 이 컴퓨터에만 임시 저장돼요)</p>
+      <div style="margin-bottom:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#f8faff">
+        <label for="tSiteTitle" style="margin-top:0">🏷 사이트 제목 <span class="muted">(맨 위 제목 줄에 표시돼요)</span></label>
+        <input type="text" id="tSiteTitle" maxlength="40" autocomplete="off" placeholder="아두이노 리치쉴드 실습">
+      </div>
+      <label for="tTitle">제목</label>
+      <input type="text" id="tTitle" maxlength="60" autocomplete="off">
+      <label for="tLevel">단계</label>
+      <select id="tLevel"><option>기초</option><option>중급</option><option>고급</option></select>
+      <label for="tDesc">미션 설명</label>
+      <textarea id="tDesc" rows="3" maxlength="600"></textarea>
+      <label for="tStd">성취기준</label>
+      <textarea id="tStd" rows="2" maxlength="300"></textarea>
+      <label for="tExp">성취 기대</label>
+      <textarea id="tExp" rows="2" maxlength="300"></textarea>
+      <label for="tSteps">해결 순서 <span class="muted">(한 줄에 한 단계)</span></label>
+      <textarea id="tSteps" rows="6"></textarea>
+      <div style="margin-top:12px">
+        <b style="font-size:.88rem">채점 항목 <span class="muted">(읽기 전용)</span></b>
+        <ul class="checks" id="tChecks"></ul>
+        <p class="note">채점 기준은 문구가 아니라 코드(<code>QUESTIONS</code>의 <code>checks</code>)에서 바꿀 수 있어요.</p>
+      </div>
+      <div style="margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#f8faff">
+        <b>📥 결과 받을 곳 (구글 시트)</b>
+        <p class="note" style="margin-top:4px">학생이 <b>📤 결과 제출</b>을 누르면 이 주소로 보내져, 시트에 <b>학생 1명 = 1줄</b>로 엑셀처럼 정리돼요. 입력한 주소는 아래 <b>🚀 학생에게 적용하기</b>를 눌러야 학생들에게도 적용돼요.</p>
+        <label for="cUrl">Apps Script 웹 앱 주소 <span class="muted">(…/exec 로 끝나요)</span></label>
+        <input type="text" id="cUrl" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec">
+        <div class="row" style="margin-top:8px"><button id="cTest" type="button">🔌 연결 테스트</button></div>
+        <details class="note" style="margin-top:8px">
+          <summary><b>처음 한 번만: 시트 연결 방법 (5분)</b></summary>
+          <ol style="margin:6px 0 0 18px;padding:0">
+            <li>결과를 모을 구글 시트를 열고 <b>확장 프로그램 → Apps Script</b>를 누릅니다.</li>
+            <li>기본 코드를 모두 지우고, 아래 <b>코드 복사</b> 버튼으로 복사한 코드를 붙여넣은 뒤 저장(💾)합니다.</li>
+            <li><b>배포 → 새 배포 → 유형: 웹 앱</b>을 고르고, 실행 계정은 <b>나</b>, 액세스 권한은 <b>모든 사용자</b>로 한 뒤 <b>배포</b>합니다. (권한 승인 창이 뜨면 허용)</li>
+            <li>나온 <b>웹 앱 URL</b>을 위 주소 칸에 붙여넣고 <b>연결 테스트</b>를 눌러 확인합니다.</li>
+            <li>마지막으로 <b>🚀 학생에게 적용하기</b>를 누르면 끝이에요.</li>
+          </ol>
+          <div class="row" style="margin:8px 0 4px"><button id="gsCopy" type="button">📋 Apps Script 코드 복사</button></div>
+          <textarea id="gsCode" readonly rows="8" spellcheck="false">/**
+ * 아두이노 리치쉴드 실습 결과 수집 (구글 시트 정리용)
+ *
+ * - 학생이 [결과 제출]을 누르면 '학생결과' 시트에 학생 1명 = 1줄로 정리돼요. (엑셀처럼 보기)
+ *   같은 학번+이름이 다시 제출하면 새 줄이 생기지 않고 그 줄이 최신 결과로 바뀌어요.
+ * - '제출기록' 시트에는 제출할 때마다 원본이 한 줄씩 남아요. (실수로 덮어써도 복구 가능)
+ * - 웹 앱으로 배포: 실행 계정 = 나 / 액세스 권한 = 모든 사용자
+ */
+const SPREADSHEET_ID = "1-bNjcjzMbLnoKpWx7j686ZBHpIY8InAlCV1GRY36ypk"; // 이 시트에 기록해요. (시트에서 열었다면 비워 둬도 돼요: "")
+const RESULT_SHEET = "학생결과";
+const LOG_SHEET = "제출기록";
+const FIXED_COLS = 3; // 학번, 이름, 완성
+
+function doGet(e) {
+  const p = (e &amp;&amp; e.parameter) || {};
+  let out;
+  try {
+    const action = p.action || "ping";
+    if (action === "ping") out = { ok: true, message: "결과 수집 서버가 동작 중이에요.", time: now_() };
+    else if (action === "submit") out = submit_(p);
+    else out = { ok: false, error: "알 수 없는 요청이에요." };
+  } catch (err) {
+    out = { ok: false, error: String((err &amp;&amp; err.message) || err) };
+  }
+  return reply_(out, p.cb);
+}
+
+function reply_(obj, cb) {
+  const json = JSON.stringify(obj);
+  if (cb &amp;&amp; /^[A-Za-z_$][\w$]{0,60}$/.test(cb)) {
+    return ContentService.createTextOutput(cb + "(" + json + ");").setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
+}
+
+function now_() { return Utilities.formatDate(new Date(), "Asia/Seoul", "yyyy-MM-dd HH:mm:ss"); }
+function open_() { return SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet(); }
+function clean_(v, max) { return String(v == null ? "" : v).replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, max); }
+function norm_(v) { return String(v == null ? "" : v).replace(/\s+/g, "").toLowerCase(); }
+
+// d = "통과(0/1),제출횟수,통과차수;" 를 문항 순서대로 이어 붙인 글자
+function parse_(d) {
+  const parts = String(d || "").split(";");
+  if (parts.length &lt; 1 || parts.length &gt; 60) throw new Error("결과 형식이 올바르지 않아요.");
+  return parts.map(function (t) {
+    const a = t.split(",").map(function (x) { return parseInt(x, 10); });
+    if (a.length !== 3 || a.some(function (n) { return isNaN(n) || n &lt; 0 || n &gt; 999; })) throw new Error("결과 형식이 올바르지 않아요.");
+    return { done: a[0] === 1, tries: a[1], first: a[2] };
+  });
+}
+
+function cell_(x) {
+  if (x.done) return { text: "✔ " + x.first + "회", bg: "#d9f2e3" };   // 통과 (몇 번째 제출에 통과했는지)
+  if (x.tries &gt; 0) return { text: "✘ " + x.tries + "회", bg: "#fde2e2" }; // 제출했지만 아직 미통과
+  return { text: "", bg: "#ffffff" };                                  // 아직 안 함
+}
+
+function getSheet_(ss, name) { return ss.getSheetByName(name) || ss.insertSheet(name); }
+
+function ensureHeader_(sh, n) {
+  const header = ["학번", "이름", "완성"];
+  for (let i = 1; i &lt;= n; i++) header.push(i + "번");
+  header.push("마지막 제출");
+  const cur = sh.getRange(1, 1, 1, header.length).getValues()[0];
+  if (JSON.stringify(cur) !== JSON.stringify(header)) {
+    sh.getRange(1, 1, 1, header.length).setValues([header]).setFontWeight("bold").setBackground("#e8f0ff");
+    sh.setFrozenRows(1);
+    sh.setFrozenColumns(2);
+  }
+}
+
+function submit_(p) {
+  const id = clean_(p.id, 20), name = clean_(p.name, 20);
+  if (!id || !name) throw new Error("학번과 이름이 필요해요.");
+  const items = parse_(p.d);
+  const n = items.length;
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const ss = open_();
+    const sh = getSheet_(ss, RESULT_SHEET);
+    ensureHeader_(sh, n);
+
+    // 같은 학번+이름이면 그 줄을 갱신, 없으면 새 줄 추가
+    const key = norm_(id) + "|" + norm_(name);
+    const last = sh.getLastRow();
+    let row = -1;
+    if (last &gt; 1) {
+      const vals = sh.getRange(2, 1, last - 1, 2).getValues();
+      for (let i = 0; i &lt; vals.length; i++) {
+        if (norm_(vals[i][0]) + "|" + norm_(vals[i][1]) === key) { row = i + 2; break; }
+      }
+    }
+    const isNew = row &lt; 0;
+    if (isNew) row = last + 1;
+
+    const cells = items.map(cell_);
+    const doneN = items.filter(function (x) { return x.done; }).length;
+    const time = now_();
+    const line = [id, name, doneN].concat(cells.map(function (c) { return c.text; })).concat([time]);
+
+    sh.getRange(row, 1, 1, 2).setNumberFormat("@");            // 학번·이름은 글자로 저장 (앞자리 0 보존, 수식 방지)
+    sh.getRange(row, 1, 1, line.length).setValues([line]);
+    sh.getRange(row, FIXED_COLS + 1, 1, n).setBackgrounds([cells.map(function (c) { return c.bg; })]);
+    if (isNew &amp;&amp; sh.getLastRow() &gt; 2) {
+      sh.getRange(2, 1, sh.getLastRow() - 1, line.length).sort({ column: 1, ascending: true }); // 새 학생이 추가되면 학번 순으로 정렬
+    }
+
+    // 제출기록(원본) 한 줄 추가
+    const lg = getSheet_(ss, LOG_SHEET);
+    if (lg.getLastRow() === 0) {
+      lg.getRange(1, 1, 1, 5).setValues([["제출시각", "학번", "이름", "완성", "결과(원본)"]]).setFontWeight("bold").setBackground("#f1f5fc");
+      lg.setFrozenRows(1);
+    }
+    const r = lg.getLastRow() + 1;
+    lg.getRange(r, 1, 1, 5).setNumberFormat("@").setValues([[time, id, name, String(doneN), String(p.d)]]);
+
+    return { ok: true, updated: !isNew, doneCount: doneN, total: n, time: time };
+  } finally {
+    lock.releaseLock();
+  }
+}
+</textarea>
+          <p class="note">· 코드 맨 위 <code>SPREADSHEET_ID</code>가 결과를 기록할 시트예요. 다른 시트에 모으려면 그 시트의 ID로 바꾸거나 <code>""</code>(빈 글자)로 두세요. (빈 글자면 Apps Script를 연 그 시트에 기록돼요)<br>
+          · 결과는 <b>학생결과</b>(1명 1줄)와 <b>제출기록</b>(제출할 때마다 원본 1줄) 시트에 쌓여요.<br>
+          · 액세스 권한에 ‘모든 사용자’가 보이지 않으면(학교 계정 정책) 개인 구글 계정으로 만든 시트에서 진행해 주세요.<br>
+          · 코드를 고쳐 다시 배포할 때는 <b>배포 관리 → 수정 → 새 버전</b>으로 해야 주소가 바뀌지 않아요.</p>
+        </details>
+      </div>
+      <div style="margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#f8faff">
+        <div class="row">
+          <button id="tPublish" class="primary">🚀 학생에게 적용하기</button>
+          <span class="muted">누르면 GitHub에 자동 저장 · 파일을 직접 올릴 필요 없어요</span>
+        </div>
+        <details id="pubSetup" class="note" style="margin-top:8px">
+          <summary><b>처음 한 번만 설정 (저장소·토큰)</b></summary>
+          <div style="margin-top:6px">
+            <label for="pRepo">GitHub 저장소 <span class="muted">(예: 내아이디/저장소이름)</span></label>
+            <input type="text" id="pRepo" autocomplete="off" placeholder="내아이디/저장소이름">
+            <div class="row" style="margin-top:4px">
+              <div style="flex:1;min-width:140px"><label for="pBranch">브랜치</label><input type="text" id="pBranch" autocomplete="off" placeholder="main"></div>
+              <div style="flex:2;min-width:200px"><label for="pPath">파일 위치 <span class="muted">(index.html과 같은 폴더)</span></label><input type="text" id="pPath" autocomplete="off" placeholder="missions.json"></div>
+            </div>
+            <label for="pToken">토큰 <span class="muted">(이 컴퓨터 브라우저에만 저장돼요 · 학생 컴퓨터에서는 입력하지 마세요)</span></label>
+            <input type="password" id="pToken" autocomplete="off" placeholder="github_pat_...">
+            <div class="row" style="margin-top:8px">
+              <button id="pSave" class="primary">설정 저장</button>
+              <button id="pClear" class="danger">설정·토큰 지우기</button>
+            </div>
+            <p class="note"><b>토큰 만드는 방법</b></p>
+            <ol class="note" style="margin:0 0 0 18px;padding:0">
+              <li>GitHub 로그인 → 오른쪽 위 프로필 → <b>Settings</b> → 맨 아래 <b>Developer settings</b></li>
+              <li><b>Personal access tokens → Fine-grained tokens → Generate new token</b></li>
+              <li><b>Expiration</b>은 90일 정도로, <b>Repository access</b>는 <b>Only select repositories</b>에서 이 저장소만 고릅니다.</li>
+              <li><b>Permissions → Repository permissions → Contents</b>를 <b>Read and write</b>로 바꿉니다.</li>
+              <li><b>Generate token</b> 후 나온 <b>github_pat_…</b> 글자를 위 토큰 칸에 붙여넣고 <b>설정 저장</b>을 누릅니다. (토큰은 이 화면에서만 보이니 한 번 복사해 두세요)</li>
+            </ol>
+          </div>
+        </details>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button id="tExport">⬇ missions.json 내려받기 <span class="muted">(직접 올릴 때)</span></button>
+        <button id="tImportBtn">⬆ missions.json 불러오기</button>
+        <input type="file" id="tImportFile" accept=".json,application/json" class="hidden">
+        <button id="tResetOne">이 문항 처음 상태로</button>
+        <button id="tClearDraft" class="danger">이 기기 수정본 지우기</button>
+      </div>
+      <p id="tMsg" class="note" role="status"></p>
+    </section>
+  </div>
 </div>
+
 <script>
+/* ============ 설정 ============ */
+const TEACHER_PASSWORD = "1234";          // ← 교사용 비밀번호를 바꿔 쓰세요
+const STORE = "ard_grader_v1";
 
-    // --- 3단원 교육과정 성취기준 기반 문항 DB ---
-    const QUESTIONS = [
-        {
-            "id": 1, "chapter": "1차시: 반가워, 파이썬!", "level": "기초", "title": "첫 메시지 출력하기",
-            "description": "print() 함수를 사용하여 화면에 'Hello, Python!'이라는 문장을 정확하게 출력해 보세요.",
-            "standard": "[12정03-03] 프로그래밍 언어의 변수, 자료형, 연산자를 활용하여 데이터를 처리하는 코드를 작성한다.",
-            "expectation": "출력 함수 print()의 구조를 완벽히 이해하고 문자열 데이터를 처리할 수 있다.",
-            "steps": ["1단계: 소문자로 print() 함수를 작성합니다.", "2단계: 괄호 안에 문자열 구분 기호(따옴표)를 넣습니다.", "3단계: 문자열 내부에 Hello, Python! 문구를 입력합니다."],
-            "checks": ["print", "Hello, Python!"]
-        },
-        {
-            "id": 2, "chapter": "1차시: 반가워, 파이썬!", "level": "기초", "title": "나만의 다중행 출력",
-            "description": "print() 함수를 연속으로 두 번 사용하여 첫 줄에는 이름, 둘째 줄에는 자신의 컴퓨터공학 관심 분야를 출력해 보세요.",
-            "standard": "[12정03-03] 프로그래밍 언어의 변수, 자료형, 연산자를 활용하여 데이터를 처리하는 코드를 작성한다.",
-            "expectation": "개행 제어 구조를 파악하고 코드의 순차적 동작 흐름을 경험한다.",
-            "steps": ["1단계: 첫 번째 줄에 print()문으로 이름을 적습니다.", "2단계: 두 번째 줄에 또 다른 print()문으로 관심 분야를 적습니다."],
-            "checks": ["print"]
-        },
-        {
-            "id": 3, "chapter": "1차시: 반가워, 파이썬!", "level": "기초", "title": "코드 안에 주석 남기기",
-            "description": "컴퓨터가 해석하지 않는 주석 기호(#)를 달고 바로 오른쪽에 '테스트 완료'를 적어보세요.",
-            "standard": "[12정03-07] 프로그램 개발 과정에서 발생하는 오류(Syntax/런타임/논리 오류)를 디버깅하여 수정한다.",
-            "expectation": "디버깅 시 예외 코드 관리와 주석 처리 기법을 교습한다.",
-            "steps": ["1단계: # 기호를 맨 앞에 적습니다.", "2단계: '테스트 완료' 글자를 작성합니다."],
-            "checks": ["#", "테스트 완료"]
-        },
-        {
-            "id": 4, "chapter": "2차시: 변수와 자료형", "level": "기초", "title": "정수 변수 할당하기",
-            "description": "변수 `age`를 생성한 후 본인의 나이에 해당하는 숫자를 대입(=)하고 출력하는 코드를 완성하세요.",
-            "standard": "[12정03-03] 프로그래밍 언어의 변수, 자료형, 연산자를 활용하여 데이터를 처리하는 코드를 작성한다.",
-            "expectation": "할당 연산자(=)와 정수 변수의 수치 보존 매커니즘을 배운다.",
-            "steps": ["1단계: age = 숫자를 선언합니다.", "2단계: print(age) 구문으로 출력 상태를 검증합니다."],
-            "checks": ["age", "=", "print"]
-        },
-        {
-            "id": 13, "chapter": "5차시: 조건문(if-else)", "level": "중급", "title": "성인 판별 조건문",
-            "description": "변수 `user_age`가 20 이상이면 '성인입니다', 미만이면 '미성년자입니다'를 출력하도록 if-else 문을 작성하세요.",
-            "standard": "[12정03-04] 제어구조(선택, 반복)를 활용하여 논리적인 흐름을 제어하는 프로그램을 구현한다.",
-            "expectation": "분기 구조 연산법과 제어 흐름 설계 능력을 함양한다.",
-            "steps": ["1단계: if user_age >= 20: 형태로 제어 헤더를 정의합니다.", "2단계: 들여쓰기 후 else: 구조를 연결합니다."],
-            "checks": ["if", ">=", "else:", "print"]
-        },
-        {
-            "id": 19, "chapter": "7차시: 반복문(for)", "level": "중급", "title": "지정 횟수 자동 반복",
-            "description": "for문 및 range() 함수를 사용하여 '파이썬 최고!'를 화면에 5번 출력시키는 코드를 작성하세요.",
-            "standard": "[12정03-04] 제어구조(선택, 반복)를 활용하여 논리적인 흐름을 제어하는 프로그램을 구현한다.",
-            "expectation": "반복 수치 제어 구조의 인자 제어 방식을 마스터한다.",
-            "steps": ["1단계: for i in range(5): 루프 블록을 설계합니다.", "2단계: 루프 내부 실행 명령어로 print 함수를 매핑합니다."],
-            "checks": ["for", "in", "range", "print"]
-        }
-    ];
+/* ============ 문항 (필요한 코드 조각을 정규식으로 검사) ============ */
+const S1="[12정01-01] 컴퓨팅 시스템을 구성하는 하드웨어와 소프트웨어의 유기적 관계 및 작동 원리를 이해한다.";
+const S2="[12정01-02] 피지컬 컴퓨팅 시스템을 설계하고 구현하여 실생활의 문제를 창의적으로 해결한다.";
+const c=(label,re)=>({label,re});
+const cnt=(re,n)=>code=>(code.match(re)||[]).length>=n;
+const Q=(n,level,title,desc,std,exp,steps,checks)=>({id:"Q"+n,level,title,desc,std,exp,steps:steps.split("|"),checks});
+const SETUP=c("setup() 함수 작성",/void\s+setup\s*\(\s*\)/), LOOP=c("loop() 함수 작성",/void\s+loop\s*\(\s*\)/);
+const NP=[c("네오픽셀 라이브러리 포함",/#include\s*<Adafruit_NeoPixel\.h>/),c("Adafruit_NeoPixel 객체 선언",/Adafruit_NeoPixel\s+\w+\s*\(/),c("strip.begin() 호출",/\w+\.begin\(\s*\)/)];
+const QUESTIONS=[
+Q(1,"기초","[1차시] 시리얼 모니터로 인사하기","setup()에서 시리얼 통신을 시작하고, 시리얼 모니터에 ‘Hello Arduino’를 한 번 출력하세요.",S1,"아두이노 프로그램의 기본 구조(setup/loop)를 설명할 수 있다.","setup()과 loop() 함수 만들기|setup()에서 Serial.begin(9600) 호출|Serial.println(\"Hello Arduino\") 작성",[SETUP,LOOP,c("Serial.begin 호출",/Serial\.begin\(\s*\d+\s*\)/),c("‘Hello Arduino’ 출력",/Serial\.print(ln)?\(\s*"Hello Arduino"/i)]),
+Q(2,"기초","[1차시] 내장 LED 깜빡이기","보드의 내장 LED(LED_BUILTIN)를 1초 간격으로 켰다 끄기를 반복하세요.",S1,"디지털 출력 핀을 설정하고 제어할 수 있다.","setup()에서 pinMode(LED_BUILTIN, OUTPUT)|loop()에서 digitalWrite HIGH|delay(1000) 후 LOW|delay(1000)",[SETUP,LOOP,c("pinMode OUTPUT 설정",/pinMode\(\s*LED_BUILTIN\s*,\s*OUTPUT\s*\)/),c("켜기(HIGH)",/digitalWrite\([^)]*HIGH\s*\)/),c("끄기(LOW)",/digitalWrite\([^)]*LOW\s*\)/),{label:"delay 2번 이상 사용",test:cnt(/delay\(/g,2)}]),
+Q(3,"기초","[1차시] 1초마다 숫자 세기","변수 count를 만들어 1초마다 1씩 증가시키며 시리얼 모니터에 출력하세요.",S1,"변수와 시리얼 출력으로 프로그램의 동작을 확인할 수 있다.","전역 변수 int count = 0 선언|setup()에서 Serial.begin|loop()에서 count 출력|count를 1 증가, delay(1000)",[c("정수 변수 선언",/int\s+count\s*=\s*0/),c("Serial.begin 호출",/Serial\.begin\(/),c("count 출력",/Serial\.print(ln)?\(\s*count\s*\)/),c("count 1 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("delay(1000) 사용",/delay\(\s*1000\s*\)/)]),
+Q(4,"기초","[2차시] 네오픽셀 준비하기","Adafruit_NeoPixel 라이브러리를 포함하고, 핀 번호와 LED 개수를 변수로 선언한 뒤 setup()에서 초기화하세요.",S1,"변수로 하드웨어 설정값을 관리하고 라이브러리 객체를 초기화할 수 있다.","#include로 라이브러리 포함|const int 변수로 핀·개수 선언|Adafruit_NeoPixel 객체 만들기|setup()에서 begin() 호출",[...NP,c("핀/개수를 변수로 선언",/(const\s+)?int\s+\w+\s*=\s*\d+\s*;/)]),
+Q(5,"기초","[2차시] 첫 번째 LED 빨강 켜기","네오픽셀 0번 LED를 빨간색으로 켜세요.",S1,"setPixelColor와 show()의 역할을 구분할 수 있다.","네오픽셀 초기화|setPixelColor(0, Color(255,0,0))|show()로 화면에 반영",[...NP,c("setPixelColor 사용",/\.setPixelColor\(\s*0\s*,/),c("Color(255,0,0) 사용",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(6,"중급","[2차시] 변수로 색 바꾸기","int 변수 r, g, b에 색 값을 저장해 0번 LED를 원하는 색으로 켜고, setBrightness로 밝기를 낮추세요.",S2,"변수를 이용해 출력 값을 바꿀 수 있다.","int r, g, b 변수 선언|setBrightness로 밝기 설정|Color(r, g, b)로 색 지정|show()",[...NP,c("r, g, b 변수 선언",/int\s+r\b[\s\S]*int\s+g\b[\s\S]*int\s+b\b|int\s+r\s*=[^;]*,\s*g\s*=[^;]*,\s*b\s*=/),c("변수로 Color 지정",/Color\(\s*r\s*,\s*g\s*,\s*b\s*\)/),c("밝기 설정",/\.setBrightness\(/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(7,"기초","[3차시] K1을 누르면 켜기","K1 버튼을 누르고 있는 동안만 0번 네오픽셀 LED가 켜지게 하세요. (핀 번호는 쉴드 핀맵에서 확인해 const int로 선언)",S1,"입력 장치의 값을 읽고 조건문으로 출력을 제어할 수 있다.","K1 핀 번호를 const int로 선언|pinMode(핀, INPUT 또는 INPUT_PULLUP)|digitalRead로 버튼 읽기|if-else로 켜기/끄기",[...NP,c("버튼 핀 입력 설정",/pinMode\([^)]*INPUT/),c("digitalRead 사용",/digitalRead\(/),c("if 조건문 사용",/if\s*\(/),c("else 사용",/else/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(8,"중급","[3차시] K1 켜기 / K2 끄기","K1을 누르면 LED가 켜지고, K2를 누르면 꺼지게 하세요. (누른 뒤 손을 떼도 상태 유지)",S2,"버튼 2개와 else if로 상태를 전환하는 프로그램을 만들 수 있다.","버튼 핀 2개 선언 및 입력 설정|if(K1) → 켜기|else if(K2) → 끄기|show()",[...NP,{label:"digitalRead 2번 이상",test:cnt(/digitalRead\(/g,2)},c("else if 사용",/else\s+if\s*\(/),c("켜기(Color 사용)",/Color\(/),c("끄기(clear 또는 0,0,0)",/\.clear\(\s*\)|Color\(\s*0\s*,\s*0\s*,\s*0\s*\)/)]),
+Q(9,"중급","[3차시] 버튼별 색 바꾸기","K1은 빨강, K2는 파랑, 아무것도 안 누르면 꺼짐이 되도록 if / else if / else를 모두 사용하세요.",S2,"다중 선택 구조로 입력별 동작을 설계할 수 있다.","K1이면 빨강|else if K2이면 파랑|else 모두 끄기|show()",[...NP,c("if / else if / else 사용",/if\s*\([\s\S]*else\s+if\s*\([\s\S]*else\s*\{/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("파랑 Color(0,0,255)",/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/),{label:"digitalRead 2번 이상",test:cnt(/digitalRead\(/g,2)}]),
+Q(10,"기초","[4차시] for문으로 8개 모두 켜기","for 반복문으로 네오픽셀 8개를 모두 같은 색으로 켜세요.",S1,"반복문으로 여러 LED를 한 번에 제어할 수 있다.","네오픽셀 초기화(개수 8)|for(int i=0; i<8; i++)|setPixelColor(i, 색)|반복 후 show()",[...NP,c("for 반복문 사용",/for\s*\(\s*int\s+\w+\s*=\s*0\s*;[^;]*;[^)]*\)/),c("반복 변수를 LED 번호로 사용",/setPixelColor\(\s*(i|j|k|n|idx)\s*,/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(11,"중급","[4차시] 차례대로 켜지는 불빛","for문 안에서 LED를 한 개씩 차례로 켜고 delay로 간격을 주세요. 한 바퀴가 끝나면 모두 끄고 다시 시작합니다.",S2,"반복문과 시간 지연으로 애니메이션 효과를 만들 수 있다.","loop() 안에 for 반복|setPixelColor + show() + delay|반복이 끝나면 clear() 후 show()",[...NP,LOOP,c("for 반복문 사용",/for\s*\(\s*int\s+\w+\s*=/),c("delay 사용",/delay\(/),c("clear() 사용",/\.clear\(\s*\)/),{label:"show()를 반복 안에서 호출",test:code=>/for\s*\([\s\S]*?\{[\s\S]*?\.show\(/.test(code)}]),
+Q(12,"고급","[4차시] 왼쪽↔오른쪽 왕복 효과","for문 2개를 사용해 불빛이 0번→7번, 7번→0번으로 왕복하게 만드세요. (감소하는 for문 포함)",S2,"증가·감소 반복문을 조합해 패턴을 만들 수 있다.","증가 for: i=0; i<8; i++|감소 for: i=7; i>=0; i--|각 반복에서 한 칸만 켜기|delay로 속도 조절",[...NP,{label:"for 반복문 2개 이상",test:cnt(/for\s*\(\s*int\s/g,2)},c("감소 반복(i--)",/\w+\s*--|\w+\s*-=\s*1/),c("clear() 사용",/\.clear\(\s*\)/),c("delay 사용",/delay\(/)]),
+Q(13,"기초","[5차시] 함수로 삑 소리 내기","beep()라는 사용자 정의 함수를 만들어 부저로 소리를 내고, loop()에서 호출하세요.",S1,"함수를 정의하고 호출하는 방법을 이해한다.","부저 핀을 const int로 선언|void beep() 함수 정의|함수 안에서 tone(핀, 주파수, 시간)|loop()에서 beep() 호출",[c("함수 정의 void beep()",/void\s+beep\s*\(\s*\)/),c("tone() 사용",/tone\(/),c("beep() 호출",/\bbeep\s*\(\s*\)\s*;/),c("delay 사용",/delay\(/)]),
+Q(14,"중급","[5차시] 매개변수가 있는 함수","playNote(int freq, int ms) 함수를 만들어 주파수와 길이를 바꿔 가며 호출하세요.",S2,"매개변수로 함수의 동작을 바꿀 수 있다.","void playNote(int freq, int ms) 정의|함수 안에서 tone, delay|서로 다른 값으로 2번 이상 호출",[c("매개변수 2개 함수 정의",/void\s+playNote\s*\(\s*int\s+\w+\s*,\s*int\s+\w+\s*\)/),c("tone() 사용",/tone\(/),{label:"playNote 호출 2번 이상",test:cnt(/\bplayNote\s*\(/g,3)}]),
+Q(15,"고급","[5차시] 도레미파 연주하기","playNote 함수로 도(262)·레(294)·미(330)·파(349)를 순서대로 연주하세요.",S2,"함수를 재사용해 멜로디를 구현할 수 있다.","음계 주파수 4개 확인|playNote 함수 정의|loop() 또는 setup()에서 4번 호출|음 사이에 짧은 쉼(noTone/delay)",[c("매개변수 있는 함수 정의",/void\s+\w+\s*\(\s*int\s+\w+\s*,\s*int\s+\w+\s*\)/),c("tone() 사용",/tone\(/),{label:"4개 이상의 서로 다른 음 사용",test:code=>new Set((code.match(/\b(2[0-9]{2}|3[0-9]{2}|5[0-9]{2})\b/g)||[])).size>=4},{label:"함수 호출 4번 이상",test:code=>{const m=code.match(/void\s+(\w+)\s*\(\s*int\s+\w+\s*,\s*int/);return !!m&&(code.match(new RegExp("\\b"+m[1]+"\\s*\\(","g"))||[]).length>=5;}}]),
+Q(16,"기초","[6차시] KNOB 값 읽기","KNOB을 돌릴 때의 아날로그 값을 0.2초마다 시리얼 모니터에 출력하세요. (핀 번호는 핀맵에서 확인)",S1,"아날로그 입력값(0~1023)을 읽어 확인할 수 있다.","KNOB 핀을 const int로 선언|Serial.begin(9600)|analogRead로 값 읽기|Serial.println 후 delay(200)",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("읽은 값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
+Q(17,"중급","[6차시] 3단계로 나누기","KNOB 값이 341 미만이면 LOW, 682 미만이면 MID, 그 외는 HIGH를 시리얼 모니터에 출력하세요.",S2,"아날로그 값을 구간별 조건문으로 분류할 수 있다.","analogRead 값을 변수에 저장|if / else if / else로 구간 나누기|구간별 문자열 출력",[c("analogRead 사용",/analogRead\(/),c("if / else if / else 사용",/if\s*\([\s\S]*else\s+if\s*\([\s\S]*else\s*\{?/),c("LOW, MID, HIGH 출력",/"LOW"[\s\S]*"MID"[\s\S]*"HIGH"|"LOW"[\s\S]*"HIGH"[\s\S]*"MID"/),c("Serial.println 사용",/Serial\.println\(/)]),
+Q(18,"고급","[6차시] 최댓값·최솟값 기록","KNOB 값을 계속 읽으며 지금까지의 최댓값(maxVal)과 최솟값(minVal)을 변수에 기록하고 시리얼 모니터에 출력하세요.",S2,"변수를 비교·갱신하여 데이터를 기록할 수 있다.","maxVal=0, minVal=1023으로 시작|값이 maxVal보다 크면 갱신|값이 minVal보다 작으면 갱신|두 값 출력",[c("maxVal 변수",/int\s+maxVal\s*=/),c("minVal 변수",/int\s+minVal\s*=/),c("analogRead 사용",/analogRead\(/),{label:"if 조건문 2개 이상",test:cnt(/\bif\s*\(/g,2)},c("Serial 출력",/Serial\.print/)]),
+Q(19,"기초","[7차시] map으로 범위 바꾸기","KNOB 값(0~1023)을 map()으로 0~255로 바꿔 시리얼 모니터에 출력하세요.",S1,"map() 함수로 값의 범위를 변환할 수 있다.","analogRead 값 저장|map(값, 0, 1023, 0, 255) 사용|변환한 값 출력",[c("analogRead 사용",/analogRead\(/),c("map(값,0,1023,0,255)",/map\(\s*\w+\s*,\s*0\s*,\s*1023\s*,\s*0\s*,\s*255\s*\)/),c("Serial 출력",/Serial\.print/)]),
+Q(20,"중급","[7차시] KNOB으로 밝기 조절","KNOB을 돌려 네오픽셀 8개의 밝기를 0~255로 조절하세요.",S2,"센서 값을 변환해 출력 장치에 연결할 수 있다.","네오픽셀 초기화|analogRead 후 map으로 0~255 변환|setBrightness 적용|for로 8개 켜고 show()",[...NP,c("analogRead 사용",/analogRead\(/),c("map 사용",/map\(/),c("setBrightness 사용",/\.setBrightness\(/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(21,"고급","[7차시] KNOB으로 켜지는 개수 조절","KNOB 값을 0~8로 변환해 그 개수만큼 네오픽셀이 왼쪽부터 켜지게 하세요. (볼륨 막대 효과)",S2,"변환한 값을 반복문의 횟수로 활용할 수 있다.","map(값,0,1023,0,8)로 개수 구하기|clear()로 모두 끄기|for로 개수만큼 켜기|show()",[...NP,c("map 0~8 변환",/map\(\s*\w+\s*,\s*0\s*,\s*1023\s*,\s*0\s*,\s*8\s*\)/),c("for 반복문 사용",/for\s*\(\s*int\s/),c("clear() 사용",/\.clear\(\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(22,"기초","[8차시] 조도 값 읽기","LDR(조도 센서) 값을 읽어 시리얼 모니터에 출력하세요. 손으로 가렸을 때 값이 어떻게 변하는지 관찰합니다.",S1,"센서의 아날로그 값 변화로 작동 원리를 설명할 수 있다.","LDR 핀을 const int로 선언|analogRead로 값 읽기|Serial.println 출력, delay",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
+Q(23,"중급","[8차시] 어두우면 켜지는 LED","기준값을 변수로 정하고, LDR 값이 기준보다 낮으면(어두우면) 네오픽셀을 켜고 아니면 끄세요.",S2,"기준값을 이용한 조건 제어를 구현할 수 있다.","기준값 변수 선언|analogRead로 조도 읽기|if (조도 < 기준)이면 켜기, else 끄기|show()",[...NP,c("기준값 변수 선언",/(const\s+)?int\s+\w*(th|limit|dark|기준)\w*\s*=\s*\d+|(const\s+)?int\s+\w+\s*=\s*\d{2,4}\s*;/i),c("analogRead 사용",/analogRead\(/),c("조건문 if / else",/if\s*\([^)]*<[^)]*\)[\s\S]*else/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(24,"고급","[8차시] 스마트 가로등","주변이 어두울수록 네오픽셀이 더 밝게 켜지도록 하세요. (조도 값 → 밝기 값을 거꾸로 map)",S2,"센서 값을 반비례로 변환해 자동 제어 시스템을 만들 수 있다.","조도 읽기|map(값, 0, 1023, 255, 0)|setBrightness 적용|8개 모두 켜고 show()",[...NP,c("analogRead 사용",/analogRead\(/),c("거꾸로 map (255→0)",/map\([^)]*,\s*255\s*,\s*0\s*\)/),c("setBrightness 사용",/\.setBrightness\(/),c("for 반복문 사용",/for\s*\(\s*int\s/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(25,"기초","[9차시] 소리 크기 읽기","마이크(MIC) 값을 읽어 시리얼 모니터에 출력하세요. 박수를 칠 때 값의 변화를 관찰합니다.",S1,"소리 센서의 입력 값을 확인할 수 있다.","MIC 핀을 const int로 선언|analogRead로 값 읽기|Serial.println 출력, delay(100)",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
+Q(26,"중급","[9차시] 박수 경보기","소리 값이 기준값보다 크면 부저가 울리고, 아니면 멈추게 하세요.",S2,"센서 값에 따라 부저를 제어하는 경보기를 만들 수 있다.","기준값 변수 선언|analogRead로 소리 읽기|if 크면 tone()|else noTone()",[c("analogRead 사용",/analogRead\(/),c("if 조건문",/if\s*\([^)]*>[^)]*\)/),c("tone() 사용",/tone\(/),c("noTone() 사용",/noTone\(/)]),
+Q(27,"고급","[9차시] 박수 횟수 세기","박수 소리가 감지될 때마다 count를 1 늘려 시리얼 모니터에 출력하세요. 한 번의 박수가 여러 번 세어지지 않도록 delay를 넣으세요.",S2,"한 번의 입력을 한 번만 세도록 처리할 수 있다.","count 변수 선언|analogRead로 소리 읽기|기준 초과 시 count 1 증가|delay로 중복 방지, 출력",[c("count 변수 선언",/int\s+count\s*=\s*0/),c("analogRead 사용",/analogRead\(/),c("count 1 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("if 조건문",/\bif\s*\(/),c("delay 사용",/delay\(/),c("count 출력",/Serial\.print(ln)?\(\s*count\s*\)/)]),
+Q(28,"기초","[10차시] 조이스틱 X·Y 읽기","조이스틱의 X축, Y축 값을 함께 읽어 시리얼 모니터에 출력하세요.",S1,"2차원 좌표 입력의 원리를 설명할 수 있다.","X, Y 핀을 const int로 선언|analogRead 2번|X와 Y를 한 줄에 출력|delay",[c("Serial.begin 호출",/Serial\.begin\(/),{label:"analogRead 2번 이상",test:cnt(/analogRead\(/g,2)},{label:"Serial.print 2번 이상",test:cnt(/Serial\.print/g,2)},c("delay 사용",/delay\(/)]),
+Q(29,"중급","[10차시] 조이스틱으로 LED 이동","조이스틱을 좌우로 움직이면 불이 켜진 네오픽셀 위치(pos)가 한 칸씩 이동하게 하세요. 0~7 범위를 벗어나지 않게 합니다.",S2,"입력값으로 위치 변수를 바꾸고 범위를 제한할 수 있다.","pos 변수 선언|X값이 크면 pos 증가, 작으면 pos 감소|범위 제한(constrain 또는 if)|clear 후 pos 위치만 켜기",[...NP,c("pos 변수",/int\s+pos\s*=/),c("analogRead 사용",/analogRead\(/),c("pos 증가/감소",/pos\s*(\+\+|--|\+=|-=)|pos\s*=\s*pos\s*[+-]/),c("범위 제한",/constrain\(|pos\s*[<>]=?\s*\d/),c("setPixelColor(pos…)",/setPixelColor\(\s*pos\s*,/)]),
+Q(30,"고급","[10차시] 위치 이동 + 색 바꾸기","조이스틱으로 불빛을 좌우로 이동시키고, 조이스틱 스위치(누름)를 누를 때마다 색이 빨강→초록→파랑으로 바뀌게 하세요.",S2,"아날로그·디지털 입력을 함께 사용해 인터랙티브 시스템을 구현할 수 있다.","스위치 핀 입력 설정|색 번호 변수(colorIdx) 선언|스위치가 눌리면 colorIdx 변경|pos 위치에 해당 색으로 켜기",[...NP,c("스위치 입력 설정",/pinMode\([^)]*INPUT/),c("digitalRead 사용",/digitalRead\(/),c("analogRead 사용",/analogRead\(/),c("색 번호 변수",/int\s+color\w*\s*=/i),{label:"색 3가지 사용(빨강·초록·파랑)",test:code=>/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/.test(code)&&/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/.test(code)&&/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/.test(code)}]),
+Q(31,"기초","[11차시] 라이브러리로 DHT11 준비","DHT 센서 라이브러리를 포함하고, 객체를 선언한 뒤 setup()에서 시작하세요. (핀 번호는 핀맵에서 확인)",S1,"외부 라이브러리를 포함하고 객체를 초기화할 수 있다.","#include로 DHT 라이브러리 포함|DHT dht(핀, DHT11) 선언|setup()에서 dht.begin()",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("DHT 객체 선언(DHT11)",/DHT\s+\w+\s*\([^)]*DHT11\s*\)/),c("begin() 호출",/\w+\.begin\(\s*\)/)]),
+Q(32,"중급","[11차시] 현재 온도 출력","DHT11으로 온도를 읽어 시리얼 모니터에 출력하세요. (측정 간격은 2초 이상)",S2,"센서 라이브러리 함수로 측정값을 읽을 수 있다.","DHT 초기화|readTemperature()로 온도 읽기|Serial.println 출력|delay(2000)",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("readTemperature 사용",/\.readTemperature\(/),c("Serial 출력",/Serial\.print/),c("delay 2000 이상",/delay\(\s*([2-9]\d{3}|\d{5,})\s*\)/)]),
+Q(33,"고급","[11차시] 온습도 읽고 오류 처리","온도와 습도를 모두 읽고, isnan()으로 읽기 실패를 확인하세요. 온도가 28도 이상이면 ‘HOT’을 출력하세요.",S2,"측정 오류를 처리하고 조건에 따라 판단할 수 있다.","readTemperature, readHumidity 호출|isnan으로 실패 확인|if (온도 >= 28) 이면 HOT 출력|값 출력",[c("readTemperature 사용",/\.readTemperature\(/),c("readHumidity 사용",/\.readHumidity\(/),c("isnan 사용",/isnan\(/),c("if 조건문",/\bif\s*\(/),c("‘HOT’ 출력",/"HOT"/)]),
+Q(34,"기초","[12차시] 7세그먼트에 1234 출력","4자리 디스플레이 라이브러리를 포함하고 객체를 만든 뒤 숫자 1234를 표시하세요. (CLK, DIO 핀은 핀맵 확인)",S1,"FND 디스플레이의 구조를 이해하고 숫자를 출력할 수 있다.","디스플레이 라이브러리 포함|CLK, DIO 핀 선언 후 객체 생성|밝기 설정|1234 표시",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("디스플레이 객체 선언",/TM1637\w*\s+\w+\s*\(/),c("숫자 출력 함수 호출",/\.(showNumberDec\w*|display)\(/),c("1234 사용",/\b1234\b/)]),
+Q(35,"중급","[12차시] 1초마다 올라가는 숫자","디스플레이에 0부터 시작해 1초마다 1씩 커지는 숫자를 표시하세요. 9999 다음에는 0으로 돌아갑니다.",S2,"변수 값을 디스플레이로 출력하고 범위를 제한할 수 있다.","count 변수 선언|디스플레이에 count 표시|count 1 증가, 9999 초과 시 0|delay(1000)",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("count 변수",/int\s+count\s*=\s*0/),c("count 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("9999 범위 처리",/9999/),c("delay(1000)",/delay\(\s*1000\s*\)/)]),
+Q(36,"고급","[12차시] K1 증가 / K2 감소","K1을 누르면 숫자가 1 증가, K2를 누르면 1 감소하며 디스플레이에 표시하세요. (0~9999 범위 유지)",S2,"입력 장치와 출력 장치를 연결한 시스템을 구현할 수 있다.","K1, K2 입력 설정|누르면 count 증가/감소|범위 제한(constrain 또는 if)|디스플레이 표시",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),{label:"digitalRead 2번 이상",test:cnt(/digitalRead\(/g,2)},c("증가와 감소 모두 사용",/\+\+|\+=\s*1/),c("감소 사용",/--|-=\s*1/),c("범위 제한",/constrain\(|count\s*[<>]=?\s*\d/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/)]),
+Q(37,"기초","[13차시] 온도를 디스플레이에 표시","DHT11으로 읽은 온도를 7세그먼트 디스플레이에 표시하세요.",S1,"센서 데이터를 시각화 장치로 출력할 수 있다.","DHT와 디스플레이 라이브러리 포함|readTemperature로 읽기|정수로 바꿔 표시|delay",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("readTemperature 사용",/\.readTemperature\(/),c("디스플레이 출력",/\.(showNumberDec\w*|display)\(/)]),
+Q(38,"중급","[13차시] 온도·습도 번갈아 표시","3초마다 온도와 습도가 번갈아 디스플레이에 표시되게 하세요.",S2,"데이터를 시간 간격에 따라 순차적으로 시각화할 수 있다.","온도 읽어 표시|delay(3000)|습도 읽어 표시|delay(3000)",[c("readTemperature 사용",/\.readTemperature\(/),c("readHumidity 사용",/\.readHumidity\(/),{label:"디스플레이 출력 2번 이상",test:cnt(/\.(showNumberDec\w*|display)\(/g,2)},{label:"3초 대기 2번 이상",test:cnt(/delay\(\s*3000\s*\)/g,2)}]),
+Q(39,"고급","[13차시] K1로 온도/습도 전환","K1을 누를 때마다 표시 모드(mode)가 온도 ↔ 습도로 바뀌게 하세요. 누르고 있는 동안 여러 번 바뀌지 않도록 하세요.",S2,"상태 변수로 화면 모드를 전환하는 프로그램을 설계할 수 있다.","mode 변수 선언|K1을 누른 순간에만 mode 전환|mode에 따라 온도 또는 습도 표시",[c("mode 변수",/(int|bool|boolean)\s+mode\w*\s*=/i),c("digitalRead 사용",/digitalRead\(/),c("모드 전환",/mode\w*\s*=\s*!|mode\w*\s*=\s*1\s*-|mode\w*\s*=\s*\(?\s*mode\w*\s*\+\s*1|mode\w*\s*\^=|mode\w*\s*=\s*\w+\s*\?/i),c("온도·습도 모두 사용",/readTemperature\([\s\S]*readHumidity\(|readHumidity\([\s\S]*readTemperature\(/),c("if / else 사용",/if\s*\([\s\S]*else/)]),
+Q(40,"기초","[14차시] 리모컨 신호 받기","적외선 수신 라이브러리를 시작하고, 리모컨 버튼을 누르면 수신 여부를 시리얼 모니터에 출력하세요. (핀 번호는 핀맵 확인)",S1,"적외선 통신의 수신 과정을 설명할 수 있다.","IRremote 라이브러리 포함|수신기 시작|decode()로 신호 확인|Serial 출력",[c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("Serial.begin 호출",/Serial\.begin\(/),c("decode 사용",/\.decode\(/),c("Serial 출력",/Serial\.print/)]),
+Q(41,"중급","[14차시] 버튼 코드값 확인","리모컨 버튼의 고유 코드를 16진수(HEX)로 시리얼 모니터에 출력하세요.",S2,"수신한 데이터를 16진수로 확인하고 해석할 수 있다.","신호 수신(decode)|수신값을 HEX 형식으로 출력|다음 신호 받을 준비(resume)",[c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("decode 사용",/\.decode\(/),c("HEX 형식 출력",/Serial\.print(ln)?\([^;]*,\s*HEX\s*\)/),c("수신 재개(resume)",/\.resume\(/)]),
+Q(42,"고급","[14차시] 숫자 버튼 → 디스플레이","리모컨의 숫자 버튼(최소 3개)을 누르면 해당 숫자가 디스플레이에 표시되게 하세요. 코드값을 직접 확인해 사용합니다.",S2,"분석한 코드값으로 입력을 구분하고 출력에 연결할 수 있다.","각 버튼의 HEX 코드값 확인|if 또는 switch로 구분|해당 숫자를 디스플레이에 표시",[c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),{label:"HEX 코드값 3개 이상 사용",test:cnt(/0x[0-9a-fA-F]+/g,3)},c("if 또는 switch 사용",/\bif\s*\(|switch\s*\(/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/)]),
+Q(43,"기초","[15차시] 1번 버튼 → 빨간 불","리모컨 1번 버튼을 누르면 네오픽셀이 빨간색으로 켜지게 하세요.",S1,"무선 입력으로 출력 장치를 제어할 수 있다.","IR 수신 + 네오픽셀 초기화|1번 버튼 코드로 if 비교|빨강 켜고 show()",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("decode 사용",/\.decode\(/),c("HEX 코드값 비교",/0x[0-9a-fA-F]+/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(44,"중급","[15차시] 버튼별 색 바꾸기","1번은 빨강, 2번은 파랑, 3번은 끄기가 되도록 리모컨 버튼 3개를 구분해 제어하세요.",S2,"여러 무선 입력을 구분해 시스템을 제어할 수 있다.","버튼 3개의 코드값 확인|if / else if로 구분|색 켜기 또는 clear()|show()",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),{label:"HEX 코드값 3개 이상 사용",test:cnt(/0x[0-9a-fA-F]+/g,3)},c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("파랑 Color(0,0,255)",/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/),c("끄기(clear 또는 0,0,0)",/\.clear\(\s*\)|Color\(\s*0\s*,\s*0\s*,\s*0\s*\)/)]),
+Q(45,"고급","[15차시] 스마트 홈: 부저 토글","리모컨 버튼 하나를 누를 때마다 부저가 켜짐 ↔ 꺼짐으로 바뀌고, 다른 버튼으로 네오픽셀 색을 바꾸는 무선 제어 시스템을 만드세요.",S2,"상태 변수로 장치를 켜고 끄는 무선 제어 프로토타입을 구현할 수 있다.","부저 상태 변수(bool) 선언|토글 버튼: 상태를 반대로 바꾸기|상태에 따라 tone() / noTone()|다른 버튼으로 네오픽셀 색 변경",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("상태 변수(bool)",/(bool|boolean)\s+\w+\s*=/),c("상태 반전(!)",/(\w+)\s*=\s*!\s*\1/),c("tone() 사용",/tone\(/),c("noTone() 사용",/noTone\(/),{label:"HEX 코드값 2개 이상 사용",test:cnt(/0x[0-9a-fA-F]+/g,2)}]),
+Q(46,"기초","[16차시] 비밀번호 정하고 KNOB 읽기","비밀번호 상수(512)를 선언하고, KNOB 값을 읽어 시리얼 모니터에 출력하세요.",S1,"상수와 아날로그 입력을 이용해 금고 프로그램의 뼈대를 만들 수 있다.","const int PASSWORD = 512 선언|KNOB analogRead|값 출력, delay",[c("비밀번호 상수 512",/(const\s+int|#define)\s+\w+\s*=?\s*512/),c("analogRead 사용",/analogRead\(/),c("Serial 출력",/Serial\.print/),c("delay 사용",/delay\(/)]),
+Q(47,"중급","[16차시] 얼마나 가까운지 알려주기","KNOB 값과 비밀번호의 차이가 허용오차(예: 10) 이내이면 ‘CLOSE’, 아니면 ‘FAR’를 출력하세요. (abs 사용)",S2,"절댓값과 허용오차로 근접 여부를 판단할 수 있다.","차이 = abs(값 - PASSWORD)|허용오차 변수 선언|if 차이 <= 허용오차 → CLOSE|else → FAR",[c("analogRead 사용",/analogRead\(/),c("abs() 사용",/abs\(/),c("허용오차 변수",/(const\s+)?int\s+\w*(tol|range|gap|오차)\w*\s*=|<=?\s*\d+/i),c("if / else",/if\s*\([\s\S]*else/),c("CLOSE, FAR 출력",/"CLOSE"[\s\S]*"FAR"|"FAR"[\s\S]*"CLOSE"/)]),
+Q(48,"고급","[16차시] 디지털 금고 완성","K1을 누른 순간 KNOB 값이 비밀번호와 맞으면 네오픽셀 초록불(문 열림), 틀리면 빨간불과 부저 경고음이 나게 하세요.",S2,"입력 판단과 출력 장치를 결합한 보안 시스템을 구현할 수 있다.","K1 눌림 확인|abs로 비밀번호와 비교|맞으면 초록 켜기|틀리면 빨강 + tone()",[...NP,c("analogRead 사용",/analogRead\(/),c("digitalRead 사용",/digitalRead\(/),c("abs() 사용",/abs\(/),c("초록 Color(0,255,0)",/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("tone() 사용",/tone\(/)]),
+Q(49,"기초","[17차시] 30초 카운트다운","7세그먼트에 30부터 1초마다 1씩 줄어드는 숫자를 표시하세요.",S1,"디스플레이로 시간 변화를 표시할 수 있다.","timeLeft = 30 선언|디스플레이에 표시|timeLeft 1 감소, delay(1000)",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("30으로 시작",/int\s+\w+\s*=\s*30/),c("1 감소",/--|-=\s*1|=\s*\w+\s*-\s*1/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/),c("delay(1000)",/delay\(\s*1000\s*\)/)]),
+Q(50,"중급","[17차시] 시간 종료 처리","카운트다운이 0이 되면 부저를 울리고 더 이상 줄어들지 않게(게임 종료) 하세요.",S2,"종료 조건과 상태 변수를 이용해 게임 흐름을 제어할 수 있다.","timeLeft, gameOver 변수|0이 되면 gameOver = true|게임 종료 시 tone()|종료 후 감소 중지",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("종료 상태 변수",/(bool|boolean)\s+\w+\s*=\s*false/),c("0 이하 판정",/<=\s*0|==\s*0/),c("tone() 사용",/tone\(/),c("if 조건문",/\bif\s*\(/)]),
+Q(51,"고급","[17차시] 조이스틱 순발력 게임","30초 안에 조이스틱을 왼쪽 끝으로 민 뒤 K1을 누르면 성공(초록), 시간 안에 못 하면 실패(빨강)가 되는 미션 게임을 만드세요.",S2,"시간·조이스틱·버튼을 종합한 인터랙티브 게임을 구현할 수 있다.","카운트다운 표시|조이스틱 X값이 한쪽 끝인지 확인|그 상태에서 K1 눌림 확인|성공 초록 / 시간 종료 시 실패 빨강",[...NP,c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("analogRead 사용",/analogRead\(/),c("digitalRead 사용",/digitalRead\(/),c("논리 연산자(&&)",/&&/),c("초록 Color(0,255,0)",/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/)]),
+Q(52,"기초","[18차시] 센서 2개 읽기 (설계)","팀 프로젝트의 첫걸음: 서로 다른 센서 입력 2개 이상을 읽어 시리얼 모니터에 함께 출력하세요. (예: LDR + MIC)",S2,"문제 해결에 필요한 입력 장치를 선택하고 읽을 수 있다.","프로젝트 주제와 사용할 센서 정하기|센서 핀을 const int로 선언|각 센서값 읽기|한 줄에 함께 출력",[c("Serial.begin 호출",/Serial\.begin\(/),{label:"센서 읽기 2번 이상",test:cnt(/analogRead\(|digitalRead\(/g,2)},{label:"Serial.print 2번 이상",test:cnt(/Serial\.print/g,2)},c("delay 사용",/delay\(/)]),
+Q(53,"중급","[18차시] 입력 → 판단 → 출력","센서값을 조건문으로 판단해, 서로 다른 출력 장치 2종(네오픽셀·부저·디스플레이 중)을 제어하는 프로그램을 설계하세요.",S2,"입력-처리-출력 구조로 시스템을 설계할 수 있다.","입력 센서 선택|기준값으로 상태 판단(if)|출력 장치 2종 제어",[c("센서 읽기",/analogRead\(|digitalRead\(/),c("if 조건문",/\bif\s*\(/),{label:"출력 장치 2종 이상",test:code=>[/Adafruit_NeoPixel/,/tone\(/,/TM1637/i].filter(r=>r.test(code)).length>=2}]),
+Q(54,"고급","[18차시] 기능별로 함수 나누기","읽기·판단·출력을 각각 사용자 정의 함수로 나누고 loop()에서 호출하세요. (함수 3개 이상)",S2,"기능을 함수로 분해해 구조적인 프로그램을 설계할 수 있다.","readSensor(), judge(), showResult() 같은 함수 만들기|각 함수에 한 가지 기능만 담기|loop()에서 순서대로 호출",[{label:"사용자 정의 함수 3개 이상(setup·loop 제외)",test:code=>(code.match(/\b(void|int|bool|boolean|float)\s+(?!setup\b|loop\b)\w+\s*\([^)]*\)\s*\{/g)||[]).length>=3},LOOP,c("센서 읽기",/analogRead\(|digitalRead\(/)]),
+Q(55,"기초","[19차시] 상태 변수 만들기 (구현)","시스템의 상태(예: 평상시/경보)를 변수에 저장하고, 상태에 따라 네오픽셀 색이 바뀌게 하세요.",S2,"상태 변수로 시스템의 동작을 관리할 수 있다.","state 변수 선언|조건에 따라 state 변경|state에 따라 색 출력",[...NP,c("상태 변수",/(int|bool|boolean)\s+\w*(state|mode|status|alarm)\w*\s*=/i),c("if 조건문",/\bif\s*\(/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(56,"중급","[19차시] 센서 두 개 함께 판단","서로 다른 센서 두 개의 조건을 &&(그리고) 또는 ||(또는)로 묶어 판단하고 결과를 출력하세요.",S2,"여러 센서를 융합해 더 정확한 판단을 할 수 있다.","센서 2개 읽기|논리 연산자로 조건 결합|참/거짓에 따라 출력",[{label:"센서 읽기 2번 이상",test:cnt(/analogRead\(|digitalRead\(/g,2)},c("논리 연산자(&& 또는 ||)",/&&|\|\|/),c("if 조건문",/\bif\s*\(/),c("출력 장치 또는 Serial 사용",/Serial\.print|tone\(|\.show\(|\.display\(|showNumberDec/)]),
+Q(57,"고급","[19차시] 종합 작품 완성","센서 2종 이상 + 출력 장치 2종 이상 + 사용자 정의 함수 + 조건문을 모두 사용한 나만의 스마트 시스템(독서실 스탠드, 층간소음 경보기 등)을 완성하세요.",S2,"실생활 문제를 해결하는 피지컬 컴퓨팅 시스템을 설계하고 구현할 수 있다.","문제 상황과 해결 방법 정하기|센서 2종 이상 입력|조건에 따른 판단|출력 장치 2종 이상 제어|기능을 함수로 정리",[{label:"센서 읽기 2번 이상",test:cnt(/analogRead\(|digitalRead\(/g,2)},c("사용자 정의 함수",/\b(void|int|bool)\s+(?!setup\b|loop\b)\w+\s*\([^)]*\)\s*\{/),c("if 조건문",/\bif\s*\(/),{label:"출력 장치 2종 이상",test:code=>[/Adafruit_NeoPixel/,/tone\(/,/TM1637/i,/Serial\.print/].filter(r=>r.test(code)).length>=2},c("setup/loop 구조",/void\s+setup\s*\(\s*\)[\s\S]*void\s+loop\s*\(\s*\)/)]),
+Q(58,"기초","[20차시] 시리얼로 디버깅하기","프로그램의 진행 상황과 센서값을 확인할 수 있도록 Serial.println 출력을 3곳 이상 넣으세요.",S1,"디버깅 도구로 프로그램의 동작을 점검할 수 있다.","Serial.begin 시작|센서값 출력|상태 변화 시 메시지 출력",[c("Serial.begin 호출",/Serial\.begin\(/),{label:"Serial.print 3번 이상",test:cnt(/Serial\.print/g,3)},c("센서 읽기",/analogRead\(|digitalRead\(/)]),
+Q(59,"중급","[20차시] 상수로 코드 정리하기","핀 번호와 기준값을 const int(또는 #define)로 3개 이상 선언해 코드를 읽기 쉽게 고치세요. 코드 안에 직접 쓴 핀 번호는 줄입니다.",S2,"코드 리뷰를 통해 가독성을 높일 수 있다.","핀·기준값 목록 만들기|const int로 선언|코드의 숫자를 이름으로 바꾸기",[{label:"const int / #define 3개 이상",test:code=>((code.match(/const\s+int\s+\w+\s*=/g)||[]).length+(code.match(/#define\s+\w+\s+\S+/g)||[]).length)>=3},SETUP,LOOP]),
+Q(60,"고급","[20차시] millis()로 효율 높이기","delay() 대신 millis()로 시간을 재서, 한 가지 동작이 멈추지 않고 두 가지 일을 동시에 처리하게 개선하세요. (예: 1초마다 숫자 증가 + 버튼 즉시 반응)",S2,"알고리즘의 효율성을 비교하고 개선할 수 있다.","unsigned long 변수로 이전 시각 저장|millis() - 이전 시각 >= 간격 비교|조건 만족 시 동작·이전 시각 갱신|다른 입력도 매 루프 확인",[c("millis() 사용",/millis\(\s*\)/),c("unsigned long 변수",/unsigned\s+long\s+\w+/),c("시간 차이 비교",/millis\(\s*\)\s*-\s*\w+\s*>=?|\w+\s*=\s*millis\(\s*\)/),c("다른 입력 읽기",/digitalRead\(|analogRead\(/),{label:"delay 사용 안 함",test:code=>!/delay\(/.test(code)}])
+];
 
-    let currentIndex = 0;
-    let studentScores = {};
+/* ============ 상태 ============ */
+let state = load();
+function load(){
+  try{ const s=JSON.parse(localStorage.getItem(STORE)); if(s&&s.q) return s; }catch(e){}
+  return {stuId:"",stuName:"",cur:0,q:{}};
+}
+function save(){ try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){} }
+function qs(id){ return state.q[id]||(state.q[id]={tries:0,first:0,done:false,last:null,code:""}); }
+const $=id=>document.getElementById(id);
 
-        // --- 화면 초기화 및 브라우저 로컬 저장소 동기화 로직 ---
-    window.onload = function() {
-        initScores();
-        loadStudentContext();
-        buildDropdown();
-        renderQuestion(0);
-        const savedUrl = localStorage.getItem("python_web_app_url");
-        if (savedUrl) document.getElementById("web-app-url").value = savedUrl;
-    };
+let editorCode="";
+const box=()=>$("codeBox");
+/* ============ 렌더링 ============ */
+function renderLed(){
+  const led=$("led"); led.innerHTML="";
+  for(let i=0;i<25;i++){const d=document.createElement("i"); led.appendChild(d);}
+  const heart=[1,3,5,6,7,8,9,11,12,13,17];
+  const ps=[1,3,5,6,7,8,9,11,12,13,17];
+  ps.forEach(i=>led.children[i].classList.add("on"));
+}
+function renderChips(){
+  const box=$("chips"); box.innerHTML="";
+  QUESTIONS.forEach((q,i)=>{
+    const b=document.createElement("button");
+    b.className="chip"+(i===state.cur?" active":"")+(qs(q.id).done?" done":"");
+    b.textContent=(i+1)+". "+q.title;
+    b.onclick=()=>{state.cur=i;save();renderAll();};
+    box.appendChild(b);
+  });
+}
+function renderQuestion(){
+  const q=QUESTIONS[state.cur], s=qs(q.id);
+  $("qLevel").textContent=q.level;
+  $("qTitle").textContent=q.title;
+  $("qDesc").textContent=q.desc;
+  $("qStd").textContent=q.std;
+  $("qExp").textContent=q.exp;
+  $("qSteps").innerHTML=q.steps.map(t=>"<li>"+esc(t)+"</li>").join("");
+  $("qTry").textContent=s.tries+"회";
+  $("qFirst").textContent=s.done?(s.first+"번째 제출"):"아직 미완성";
+  $("btnPrev").disabled=state.cur===0;
+  $("btnNext").disabled=state.cur===QUESTIONS.length-1;
+  showResult(s.last); box().value=s.code||""; setClearMsg("");
+}
+function showResult(last){
+  const r=$("result"), c=$("checks");
+  c.innerHTML=""; r.className="result";
+  if(!last){return;}
+  r.classList.add(last.pass?"pass":"fail");
+  r.textContent=last.pass?"🎉 통과! 필요한 블록이 모두 들어 있어요.":"아직 부족해요. 아래 빨간 항목을 확인해 보세요.";
+  last.items.forEach(it=>{
+    const li=document.createElement("li");
+    li.className=it.ok?"pass":"fail";
+    li.textContent=(it.ok?"✔ ":"✘ ")+it.label;
+    c.appendChild(li);
+  });
+}
+function renderBadges(){
+  const box=$("badges"); box.innerHTML="";
+  QUESTIONS.forEach((q,i)=>{
+    const done=qs(q.id).done;
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="badge"+(done?" done":"")+(i===state.cur?" cur":"");
+    b.textContent=i+1;
+    b.title=`${i+1}번 ${q.title} — ${done?"통과":"미완성"}`;
+    b.setAttribute("aria-label",b.title);
+    b.onclick=()=>{state.cur=i;save();renderAll();};
+    box.appendChild(b);
+  });
+}
+function renderAll(){renderBadges();renderChips();renderQuestion();}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
 
-    function initScores() {
-        QUESTIONS.forEach(q => {
-            studentScores[q.id] = { done: 0, tries: 0, first: 0 };
-        });
-    }
+/* ============ 채점 ============ */
+function grade(q,code){
+  // 복사·붙여넣기 때 섞이는 특수 문자를 먼저 정리해요.
+  code=code
+    .replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g," ")  // 특수 공백 -> 일반 공백
+    .replace(/[\u200B-\u200D\u2060\uFEFF]/g,"")  // 보이지 않는 문자 제거
+    .replace(/[\u2018\u2019\u02BC]/g,"'")  // 곡선 작은따옴표
+    .replace(/[\u201C\u201D]/g,'"')  // 곡선 큰따옴표
+    .replace(/\uFF08/g,"(").replace(/\uFF09/g,")")  // 전각 괄호
+    .replace(/\r\n?/g,"\n");
+  // 한글 등 비영문 이름(함수·변수)도 인식되도록, ASCII가 아닌 글자는 'x'로 바꿔서 검사해요.
+  code=code.replace(/\/\*[\s\S]*?\*\//g,"").replace(/\/\/[^\n]*/g,"");
+  code=code.replace(/[^\x00-\x7F]/g,"x");
+  const items=q.checks.map(c=>({label:c.label, ok: c.test? !!c.test(code) : c.re.test(code)}));
+  return {pass:items.every(i=>i.ok),items};
+}
+$("btnSubmit").onclick=()=>{
+  if(!state.stuId.trim()||!state.stuName.trim()){alert("학번과 이름을 먼저 입력해 주세요.");return;}
+  const q=QUESTIONS[state.cur], s=qs(q.id);
+  const code=box().value.trim();
+  if(!code){alert("코드 입력창이 비어 있어요. 아두이노 IDE에서 완성한 스케치를 붙여넣은 뒤 다시 눌러 주세요.");return;}
+  if(false){alert("\n위쪽에 'MakeCode 연결됨'이 보이는지 확인하고, 블록을 만든 뒤 다시 눌러 주세요.\n계속 안 되면 '편집기 새로고침'을 눌러 보세요.");return;}
+  const res=grade(q,code);
+  s.tries++; s.code=code; s.last={pass:res.pass,items:res.items,at:Date.now()};
+  if(res.pass&&!s.done){s.done=true;s.first=s.tries;}
+  save(); renderAll();
+};
+function setClearMsg(t,k){const m=$("clearMsg");m.textContent=t;m.style.color=k==="ok"?"var(--ok)":"var(--sub)";}
+$("btnClearBlocks").onclick=()=>{if(!confirm("입력한 코드를 모두 지울까요?"))return;box().value="";qs(QUESTIONS[state.cur].id).code="";save();setClearMsg("✔ 코드를 지웠어요.","ok");};
+$("codeBox").addEventListener("input",e=>{qs(QUESTIONS[state.cur].id).code=e.target.value;save();});
+$("btnPrev").onclick=()=>{if(state.cur>0){state.cur--;save();renderAll();}};
+$("btnNext").onclick=()=>{if(state.cur<QUESTIONS.length-1){state.cur++;save();renderAll();}};
+$("btnReload").onclick=()=>{ window.open("https://wokwi.com/projects/new/arduino-uno","_blank"); };
 
-    function buildDropdown() {
-        const select = document.getElementById("question-select");
-        select.innerHTML = "";
-        QUESTIONS.forEach((q, idx) => {
-            const opt = document.createElement("option");
-            opt.value = idx;
-            opt.innerText = `[Q${q.id}] ${q.chapter.split(':')[0]} - ${q.title}`;
-            select.appendChild(opt);
-        });
-    }
+/* 학생 정보 자동 저장 */
+$("stuId").value=state.stuId; $("stuName").value=state.stuName;
+$("stuId").oninput=e=>{state.stuId=e.target.value;save();};
+$("stuName").oninput=e=>{state.stuName=e.target.value;save();};
 
-    function renderQuestion(index) {
-        currentIndex = index;
-        const q = QUESTIONS[index];
-        const record = studentScores[q.id];
-        
-        document.getElementById("question-select").value = index;
-        document.getElementById("btn-prev").disabled = (index === 0);
-        document.getElementById("btn-next").disabled = (index === QUESTIONS.length - 1);
-        
-        document.getElementById("mission-level").className = `badge ${q.level}`;
-        document.getElementById("mission-level").innerText = q.level;
-        document.getElementById("mission-title").innerText = `Q${q.id}. ${q.title} (${q.chapter})`;
-        document.getElementById("mission-desc").innerText = q.description;
-        document.getElementById("mission-standard").innerText = q.standard;
-        document.getElementById("mission-expectation").innerText = q.expectation;
-        
-        const stepsUl = document.getElementById("mission-steps");
-        stepsUl.innerHTML = "";
-        q.steps.forEach(step => {
-            const li = document.createElement("li");
-            li.innerText = step;
-            stepsUl.appendChild(li);
-        });
-        
-        document.getElementById("submit-count").innerText = record.tries;
-        const statusLabel = document.getElementById("completion-status");
-        if (record.done === 1) {
-            statusLabel.className = "status-badge complete";
-            statusLabel.innerText = `✔ 완성 (${record.first}회째 통과)`;
-        } else {
-            statusLabel.className = "status-badge incomplete";
-            statusLabel.innerText = "아직 미완성";
-        }
-        
-        const savedDraft = localStorage.getItem(`draft_q_${q.id}`);
-        document.getElementById("code-editor").value = savedDraft ? savedDraft : "";
-    }
+let teacherOn=false;   // 교사용 비밀번호를 한 번 입력했는지
 
-    function moveQuestion(dir) {
-        let target = currentIndex + dir;
-        if (target >= 0 && target < QUESTIONS.length) { renderQuestion(target); }
-    }
-    function selectQuestion(val) { renderQuestion(parseInt(val, 10)); }
-    function trackDraft() {
-        const q = QUESTIONS[currentIndex];
-        const code = document.getElementById("code-editor").value;
-        localStorage.setItem(`draft_q_${q.id}`, code);
-    }
-    // --- 실시간 정적 분석 채점 및 크로스도메인 전송 엔진 ---
-    function clearEditor() {
-        if(confirm("작성 중인 모든 코드가 삭제됩니다. 지우시겠습니까?")) {
-            document.getElementById("code-editor").value = "";
-            trackDraft();
-        }
-    }
-    function resetEditorToDefault() {
-        document.getElementById("code-editor").value = "# 다시 코드를 작성해 보세요.\n";
-        trackDraft();
-    }
+/* ============ 선생님 화면: 미션 문구 편집 ============
+   - 고친 문구는 이 기기(localStorage)에 자동 저장돼요. (선생님 브라우저에서만 보여요)
+   - 학생들에게 적용하려면 missions.json을 내려받아 GitHub 저장소(index.html과 같은 폴더)에 올리세요.
+   - 학생 화면은 시작할 때 missions.json을 읽어 와서 문구를 바꿔 끼워요. (파일이 없으면 기본 문구) */
+const MKEY="ard_missions_draft_v1";
+const LEVELS=["기초","중급","고급"];
+const BASE=QUESTIONS.map(q=>({title:q.title,level:q.level,desc:q.desc,std:q.std,exp:q.exp,steps:q.steps.slice()}));
+function clip(v,n){ return String(v==null?"":v).replace(/\r/g,"").trim().slice(0,n); }
+function cleanOne(o,base){
+  if(!o||typeof o!=="object") return null;
+  const f=(k,n)=>o[k]===undefined?base[k]:clip(o[k],n);
+  const steps=Array.isArray(o.steps)?o.steps.map(t=>clip(t,200)).filter(Boolean).slice(0,12):base.steps.slice();
+  return {title:clip(o.title,60)||base.title, level:LEVELS.includes(o.level)?o.level:base.level,
+          desc:f("desc",600), std:f("std",300), exp:f("exp",300), steps:steps.length?steps:base.steps.slice()};
+}
+function cleanMissions(obj){
+  const src=obj&&typeof obj==="object"&&obj.missions&&typeof obj.missions==="object"?obj.missions:obj;
+  const out={};
+  QUESTIONS.forEach((q,i)=>{ const c=src&&typeof src==="object"?cleanOne(src[q.id],BASE[i]):null; if(c) out[q.id]=c; });
+  return out;
+}
+function loadDraft(){ try{ return cleanMissions(JSON.parse(localStorage.getItem(MKEY))||{}); }catch(e){ return {}; } }
+function saveDraft(){ try{ localStorage.setItem(MKEY,JSON.stringify(draftM)); }catch(e){} }
+let remoteM={}, draftM=loadDraft();
+function applyAll(){   // 처음 문구 ← missions.json ← 이 기기 수정본 순으로 덮어써요.
+  QUESTIONS.forEach((q,i)=>{
+    const m=draftM[q.id]||remoteM[q.id]||BASE[i];
+    q.title=m.title; q.level=m.level; q.desc=m.desc; q.std=m.std; q.exp=m.exp; q.steps=m.steps.slice();
+  });
+}
+function missionOf(q){ return {title:q.title,level:q.level,desc:q.desc,std:q.std,exp:q.exp,steps:q.steps.slice()}; }
+function isModified(i){ return JSON.stringify(missionOf(QUESTIONS[i]))!==JSON.stringify(BASE[i]); }
+function loadRemote(){
+  if(!/^https?:$/.test(location.protocol)) return;
+  // 주소 뒤에 매번 다른 값을 붙여서, GitHub Pages가 옛 파일을 캐시해 두고 있어도 F5(새로고침)만 누르면 최신 문구를 읽어 와요.
+  fetch("missions.json?v="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{
+    if(!j) return;
+    remoteM=cleanMissions(j); remoteC=cleanConfig(j); applyAll(); applySiteTitle(); renderAll(); refreshTeacher();
+  }).catch(()=>{});
+}
 
-    function validateAndSubmit() {
-        const id = document.getElementById("student-id").value.trim();
-        const name = document.getElementById("student-name").value.trim();
-        if (!id || !name) {
-            alert("⚠️ 학번과 이름을 정확히 입력해야 결과를 서버에 송신할 수 있습니다.");
-            return;
-        }
-        const q = QUESTIONS[currentIndex];
-        const code = document.getElementById("code-editor").value;
-        const record = studentScores[q.id];
-        record.tries += 1;
-        
-        let isPass = true;
-        q.checks.forEach(keyword => {
-            if (!code.includes(keyword)) { isPass = false; }
-        });
-        
-        if (isPass) {
-            if (record.done === 0) { record.done = 1; record.first = record.tries; }
-            alert(`🎉 통과했습니다! (${record.tries}번째 시도에 성공)`);
-        } else {
-            alert(`✘ 코드에 필요한 블록이나 필수 명령어가 빠져있거나 오타가 있습니다.`);
-        }
-        renderQuestion(currentIndex);
-        
-        let dataString = "";
-        QUESTIONS.forEach(item => {
-            const r = studentScores[item.id];
-            dataString += `${r.done},${r.tries},${r.first};`;
-        });
-        if(dataString.endsWith(";")) dataString = dataString.slice(0, -1);
-        
-        const serverUrl = localStorage.getItem("python_web_app_url");
-        if (!serverUrl) { return; }
-        
-        const finalTargetUrl = `${serverUrl}?action=submit&id=${encodeURIComponent(id)}&name=${encodeURIComponent(name)}&d=${encodeURIComponent(dataString)}&cb=serverCallback`;
-        const oldScript = document.getElementById("jsonp-script");
-        if (oldScript) oldScript.remove();
-        
-        const script = document.createElement("script");
-        script.id = "jsonp-script";
-        script.src = finalTargetUrl;
-        document.body.appendChild(script);
-    }
+let editIdx=0;
+function tMsg(text,kind){ const m=$("tMsg"); m.textContent=text; m.style.color=kind==="ok"?"var(--ok)":kind==="bad"?"var(--bad)":"var(--sub)"; }
+function refreshTeacher(){
+  const box=$("tList"); box.innerHTML="";
+  QUESTIONS.forEach((q,i)=>{
+    const b=document.createElement("button");
+    b.type="button";
+    b.className=(i===editIdx?"active":"")+(isModified(i)?" mod":"");
+    b.textContent=(i+1)+". "+q.title;
+    b.onclick=()=>selectEdit(i);
+    box.appendChild(b);
+  });
+  const nDraft=Object.keys(draftM).length, nRemote=Object.keys(remoteM).length;
+  $("tStatus").textContent=`수정된 문항 ${QUESTIONS.filter((q,i)=>isModified(i)).length}개 · 이 기기 수정본 ${nDraft}개 · 배포 파일(missions.json) ${nRemote?nRemote+"개 적용 중":"없음"}`;
+}
+function selectEdit(i){
+  editIdx=i; const q=QUESTIONS[i];
+  $("tTitle").value=q.title; $("tLevel").value=q.level; $("tDesc").value=q.desc;
+  $("tStd").value=q.std; $("tExp").value=q.exp; $("tSteps").value=q.steps.join("\n");
+  $("tChecks").innerHTML=q.checks.map(c=>"<li>"+esc(c.label)+"</li>").join("");
+  tMsg("");
+  refreshTeacher();
+}
+function onTeacherInput(){
+  const q=QUESTIONS[editIdx];
+  draftM[q.id]=cleanOne({title:$("tTitle").value,level:$("tLevel").value,desc:$("tDesc").value,std:$("tStd").value,exp:$("tExp").value,
+                         steps:$("tSteps").value.split("\n")},BASE[editIdx]);
+  dirty=true; saveDraft(); applyAll(); renderAll(); refreshTeacher();
+  tMsg("✔ 이 기기에 저장됐어요. 다 고쳤으면 ‘🚀 학생에게 적용하기’를 눌러 주세요.","ok");
+}
+["tTitle","tLevel","tDesc","tStd","tExp","tSteps"].forEach(id=>{ $(id).addEventListener("input",onTeacherInput); $(id).addEventListener("change",onTeacherInput); });
 
-    window.serverCallback = function(response) {
-        if (response && response.ok) { console.log("구글 시트 수집 완료"); }
-    };
-    function toggleAdmin() {
-        const panel = document.getElementById("admin-panel");
-        panel.style.display = (panel.style.display === "block") ? "none" : "block";
+function askTeacher(){
+  if(teacherOn) return true;
+  const pw=prompt("교사용 비밀번호를 입력하세요.");
+  if(pw===null) return false;
+  if(pw!==TEACHER_PASSWORD){ alert("비밀번호가 맞지 않아요."); return false; }
+  teacherOn=true; return true;
+}
+$("btnEdit").onclick=()=>{
+  if(!askTeacher()) return;
+  $("teacherScreen").classList.remove("hidden");
+  fillPub(); $("cUrl").value=getSubmitUrl(); $("tSiteTitle").value=getSiteTitle();
+  selectEdit(Math.min(state.cur,QUESTIONS.length-1));
+};
+/* ---- 학생에게 바로 적용: GitHub에 missions.json을 자동으로 저장 (파일을 직접 올릴 필요 없음) ----
+   · 처음 한 번 저장소 이름과 토큰(fine-grained, Contents 읽기/쓰기)을 입력하면, 이 컴퓨터 브라우저에만 저장돼요.
+   · 코드에는 토큰이 들어 있지 않아요. 학생 컴퓨터에서는 입력하지 마세요. */
+const PKEY="ard_publish_v1";
+let dirty=false;   // 아직 학생들에게 적용하지 않은 수정이 있는지
+function loadPub(){ try{ const o=JSON.parse(localStorage.getItem(PKEY)); if(o&&typeof o==="object") return o; }catch(e){} return {}; }
+let pub=loadPub();
+function guessRepo(){   // 주소가 사용자.github.io/저장소/ 형태면 자동으로 채워요.
+  const h=location.hostname;
+  if(!/\.github\.io$/.test(h)) return "";
+  const seg=location.pathname.split("/")[1];
+  return h.split(".")[0]+"/"+(seg&&!/\.html?$/i.test(seg)?seg:h);
+}
+function fillPub(){
+  $("pRepo").value=pub.repo||guessRepo(); $("pBranch").value=pub.branch||"main";
+  $("pPath").value=pub.path||"missions.json"; $("pToken").value=pub.token||"";
+}
+function pubReady(){ return !!(pub.repo&&pub.token); }
+function missionsJson(){
+  const missions={};
+  QUESTIONS.forEach((q,i)=>{ if(isModified(i)) missions[q.id]=missionOf(q); });
+  return {count:Object.keys(missions).length,text:JSON.stringify({version:1,updatedAt:new Date().toISOString(),config:configForExport(),missions},null,2)};
+}
+$("pSave").onclick=()=>{
+  const o={repo:$("pRepo").value.trim(),branch:$("pBranch").value.trim()||"main",
+           path:$("pPath").value.trim().replace(/^\/+/,"")||"missions.json",token:$("pToken").value.trim()};
+  if(!/^[\w.-]+\/[\w.-]+$/.test(o.repo)){ tMsg("저장소는 ‘내아이디/저장소이름’ 형태로 입력해 주세요.","bad"); return; }
+  if(!o.token){ tMsg("토큰을 입력해 주세요.","bad"); return; }
+  pub=o; try{ localStorage.setItem(PKEY,JSON.stringify(pub)); }catch(e){}
+  tMsg("✔ 설정을 이 컴퓨터에 저장했어요. 이제 ‘🚀 학생에게 적용하기’를 누르면 돼요.","ok");
+};
+$("pClear").onclick=()=>{
+  if(!confirm("저장된 GitHub 설정과 토큰을 이 컴퓨터에서 지울까요?")) return;
+  pub={}; try{ localStorage.removeItem(PKEY); }catch(e){} fillPub(); tMsg("설정을 지웠어요.","ok");
+};
+function ghFail(status,message){ const e=new Error(message||""); e.status=status; return e; }
+async function ghErr(res){ let m=""; try{ m=(await res.json()).message||""; }catch(e){} return ghFail(res.status,m); }
+function friendlyGh(err){
+  if(!err||err.status===undefined) return "GitHub에 연결하지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.";
+  if(err.status===401) return "토큰이 올바르지 않거나 기간이 지났어요. 새 토큰을 만들어 다시 저장해 주세요.";
+  if(err.status===403) return "권한이 없거나 요청 한도를 넘었어요. 토큰에 ‘Contents: Read and write’ 권한이 있는지 확인해 주세요.";
+  if(err.status===404) return "저장소를 찾지 못했어요. 저장소 이름·브랜치를 확인하고, 토큰이 그 저장소에 접근할 수 있는지 확인해 주세요.";
+  return `저장하지 못했어요. (오류 ${err.status}${err.message?": "+err.message:""})`;
+}
+async function publishMissions(){
+  if(!pubReady()){ tMsg("먼저 아래 ‘처음 한 번만 설정’에서 저장소와 토큰을 입력해 주세요.","bad"); $("pubSetup").open=true; return false; }
+  const c=pub, {text}=missionsJson();
+  const api=`https://api.github.com/repos/${c.repo}/contents/${c.path.split("/").map(encodeURIComponent).join("/")}`;
+  const headers={Authorization:"Bearer "+c.token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};
+  const content=btoa(unescape(encodeURIComponent(text)));
+  $("tPublish").disabled=true; tMsg("GitHub에 저장하는 중이에요...");
+  try{
+    for(let attempt=0;attempt<2;attempt++){
+      let sha;
+      const g=await fetch(`${api}?ref=${encodeURIComponent(c.branch)}&t=${Date.now()}`,{headers,cache:"no-store"});
+      if(g.status===200) sha=(await g.json()).sha;
+      else if(g.status!==404) throw await ghErr(g);
+      const body={message:"미션 문구 수정 ("+new Date().toLocaleString("ko-KR",{timeZone:"Asia/Seoul"})+")",content,branch:c.branch};
+      if(sha) body.sha=sha;
+      const p=await fetch(api,{method:"PUT",headers:{...headers,"Content-Type":"application/json"},body:JSON.stringify(body)});
+      if(p.ok){ dirty=false; tMsg("✔ GitHub에 저장했어요! 1~2분 뒤 학생들이 F5를 누르면 바뀐 문구가 보여요.","ok"); return true; }
+      if((p.status===409||p.status===422)&&attempt===0) continue;   // 그 사이 파일이 바뀐 경우 한 번 더 시도
+      throw await ghErr(p);
     }
-    function saveAdminSettings() {
-        const url = document.getElementById("web-app-url").value.trim();
-        if(!url || !url.startsWith("https://")) { alert("올바른 주소가 아닙니다."); return; }
-        localStorage.setItem("python_web_app_url", url);
-        alert("🚀 주소가 서버에 적용되었습니다.");
-        toggleAdmin();
-    }
-    function saveStudentContext() {
-        localStorage.setItem("student_id_val", document.getElementById("student-id").value);
-        localStorage.setItem("student_name_val", document.getElementById("student-name").value);
-    }
-    function loadStudentContext() {
-        const id = localStorage.getItem("student_id_val");
-        const name = localStorage.getItem("student_name_val");
-        if(id) document.getElementById("student-id").value = id;
-        if(name) document.getElementById("student-name").value = name;
-    }
+    return false;
+  }catch(err){ console.error("GitHub 저장 오류:",err); tMsg(friendlyGh(err),"bad"); return false; }
+  finally{ $("tPublish").disabled=false; }
+}
+$("tPublish").onclick=()=>{ publishMissions(); };
+
+$("tClose").onclick=async()=>{
+  if(dirty&&pubReady()&&confirm("고친 내용을 학생들에게 적용할까요?\n(확인을 누르면 GitHub에 자동 저장돼요. 1~2분 뒤 학생들이 F5를 누르면 보여요.)")){
+    if(!(await publishMissions())) return;   // 실패하면 화면을 닫지 않고 오류를 보여줘요.
+  }
+  $("teacherScreen").classList.add("hidden"); renderAll();
+};
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("teacherScreen").classList.contains("hidden")) $("tClose").onclick(); });
+
+$("tExport").onclick=()=>{
+  const {count,text}=missionsJson();
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([text],{type:"application/json;charset=utf-8"}));
+  a.download="missions.json"; a.click(); URL.revokeObjectURL(a.href);
+  tMsg(`missions.json을 내려받았어요. (수정된 ${count}개 문항) GitHub 저장소(index.html이 있는 곳)에 직접 올려 주세요.`,"ok");
+};
+$("tImportBtn").onclick=()=>$("tImportFile").click();
+$("tImportFile").onchange=async e=>{
+  const f=e.target.files[0]; e.target.value=""; if(!f) return;
+  let j; try{ j=JSON.parse(await f.text()); }catch(err){ tMsg("파일을 읽지 못했어요. missions.json 형식이 맞는지 확인해 주세요.","bad"); return; }
+  const c=cleanMissions(j), cc=cleanConfig(j);
+  if(!Object.keys(c).length&&!cc){ tMsg("불러올 내용이 없어요. (Q1, Q2 … 형식의 missions가 들어 있어야 해요)","bad"); return; }
+  if(cc){ draftC=Object.assign({},draftC,cc); saveDraftC(); $("cUrl").value=getSubmitUrl(); $("tSiteTitle").value=getSiteTitle(); applySiteTitle(); }
+  Object.assign(draftM,c); dirty=true; saveDraft(); applyAll(); renderAll(); selectEdit(editIdx);
+  tMsg(`✔ ${Object.keys(c).length}개 문항을 불러왔어요.`,"ok");
+};
+$("tResetOne").onclick=()=>{
+  const q=QUESTIONS[editIdx];
+  if(!confirm(`${editIdx+1}번 문항을 처음 문구로 되돌릴까요?`)) return;
+  draftM[q.id]=cleanOne(BASE[editIdx],BASE[editIdx]); dirty=true; saveDraft(); applyAll(); renderAll(); selectEdit(editIdx);
+  tMsg("처음 문구로 되돌렸어요.","ok");
+};
+$("tClearDraft").onclick=()=>{
+  if(!confirm("이 기기에 저장된 수정본을 모두 지울까요?\n(배포된 missions.json이 있으면 그 문구로, 없으면 처음 문구로 돌아가요.)")) return;
+  draftM={}; draftC=null; saveDraftC(); $("cUrl").value=getSubmitUrl(); $("tSiteTitle").value=getSiteTitle(); applySiteTitle(); dirty=true; saveDraft(); applyAll(); renderAll(); selectEdit(editIdx);
+  tMsg("이 기기 수정본을 지웠어요.","ok");
+};
+
+/* ============ 결과 제출 (학생 → 선생님 구글 시트) ============
+   · 선생님 화면에서 Apps Script 웹 앱 주소를 넣으면 missions.json(config)에 담겨 학생들에게 배포돼요.
+   · 브라우저 보안 규칙(CORS)에 걸리지 않도록 ‘스크립트 호출(JSONP)’ 방식으로 보내고, 시트에 기록됐다는 응답이 와야 ‘제출 완료’를 보여줘요. */
+const DEFAULT_SUBMIT_URL="";   // 여기에 직접 적어도 되지만, 보통은 선생님 화면에서 설정해요.
+const DEFAULT_TITLE="아두이노 리치쉴드 실습";
+const SUBMIT_URL_RE=/^https:\/\/script\.google\.com\/(?:a\/macros\/[\w.-]+|macros)\/s\/[\w-]+\/exec$/;
+const CKEY="mb_config_draft_v1";
+function cleanConfig(o){
+  const c=o&&typeof o==="object"&&o.config&&typeof o.config==="object"?o.config:null;
+  if(!c) return null;
+  const out={};
+  if(c.submitUrl!==undefined){ const u=clip(c.submitUrl,300); out.submitUrl=SUBMIT_URL_RE.test(u)?u:""; }
+  const t=clip(c.title,40); if(t) out.title=t;
+  return out;
+}
+function loadDraftC(){ try{ return cleanConfig({config:JSON.parse(localStorage.getItem(CKEY))}); }catch(e){ return null; } }
+function saveDraftC(){ try{ if(draftC) localStorage.setItem(CKEY,JSON.stringify(draftC)); else localStorage.removeItem(CKEY); }catch(e){} }
+let draftC=loadDraftC(), remoteC=null;
+function getSubmitUrl(){
+  if(draftC&&draftC.submitUrl!==undefined) return draftC.submitUrl;
+  if(remoteC&&remoteC.submitUrl!==undefined) return remoteC.submitUrl;
+  return DEFAULT_SUBMIT_URL;
+}
+function getSiteTitle(){ return (draftC&&draftC.title)||(remoteC&&remoteC.title)||DEFAULT_TITLE; }
+function applySiteTitle(){ const t=getSiteTitle(); $("siteTitle").textContent=t; document.title=t; }
+
+function jsonp(url,params,timeoutMs){
+  return new Promise((resolve,reject)=>{
+    const cb="__mbcb"+Date.now()+Math.floor(Math.random()*1e6);
+    const s=document.createElement("script");
+    let finished=false;
+    const finish=()=>{ finished=true; delete window[cb]; s.remove(); clearTimeout(timer); };
+    const timer=setTimeout(()=>{ if(!finished){ finish(); reject(new Error("timeout")); } },timeoutMs||15000);
+    window[cb]=data=>{ if(!finished){ finish(); resolve(data); } };
+    s.onerror=()=>{ if(!finished){ finish(); reject(new Error("load")); } };
+    s.src=url+"?"+new URLSearchParams(Object.assign({},params,{cb})).toString();
+    document.head.appendChild(s);
+  });
+}
+let toastTimer=null;
+function toast(text,kind,ms){
+  const t=$("toast"); t.textContent=text; t.className="toast"+(kind?" "+kind:"");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.add("hidden"),ms||(kind==="bad"?9000:6000));
+}
+function packResults(){   // 문항 순서대로 "통과(0/1),제출횟수,통과차수" 를 ; 로 이어 붙여요.
+  return QUESTIONS.map(q=>{ const s=qs(q.id); return [s.done?1:0,s.tries,s.done?s.first:0].join(","); }).join(";");
+}
+$("btnSubmitResult").onclick=async()=>{
+  const id=state.stuId.trim(), name=state.stuName.trim();
+  if(!id||!name){ toast("학번과 이름을 먼저 입력해 주세요.","bad"); $(id?"stuName":"stuId").focus(); return; }
+  const url=getSubmitUrl();
+  if(!url){ toast("결과를 받을 주소가 아직 설정되지 않았어요. 선생님께 알려 주세요.","bad"); return; }
+  const doneN=QUESTIONS.filter(q=>qs(q.id).done).length;
+  if(!confirm(`학번 ${id} ${name} 학생의 결과를 제출할까요?\n(완성 ${doneN}문항 / 전체 ${QUESTIONS.length}문항)\n다시 제출하면 최신 결과로 바뀌어요.`)) return;
+  const btn=$("btnSubmitResult"); btn.disabled=true; toast("제출하는 중이에요...","",30000);
+  try{
+    const r=await jsonp(url,{action:"submit",id,name,d:packResults()},20000);
+    if(r&&r.ok) toast(`✔ 제출 완료! 선생님께 전달됐어요. (완성 ${r.doneCount}/${r.total}문항${r.updated?" · 이전 결과를 최신으로 바꿨어요":""})`,"ok");
+    else toast("제출하지 못했어요: "+((r&&r.error)||"알 수 없는 오류"),"bad");
+  }catch(err){
+    console.error("제출 오류:",err);
+    toast("선생님께 전달되지 않았어요. 인터넷 연결을 확인하고 다시 눌러 보세요. 계속 안 되면 선생님께 알려 주세요.","bad");
+  }finally{ setTimeout(()=>{ btn.disabled=false; },1500); }
+};
+
+/* 선생님 화면: 결과 받을 주소 설정 */
+function onConfigInput(){
+  const u=$("cUrl").value.trim();
+  if(u&&!SUBMIT_URL_RE.test(u)){ tMsg("주소 형식이 달라요. Apps Script ‘웹 앱 URL’(…/exec 로 끝나는 주소)을 붙여넣어 주세요.","bad"); return; }
+  draftC=Object.assign({},draftC,{submitUrl:u}); saveDraftC(); dirty=true;
+  tMsg(u?"✔ 주소를 저장했어요. ‘🔌 연결 테스트’로 확인하고 ‘🚀 학생에게 적용하기’를 눌러 주세요.":"결과 받을 주소를 비웠어요. (적용하면 학생 화면의 제출이 막혀요)","ok");
+}
+function configForExport(){   // 주소가 비어 있으면(선생님이 일부러 비운 경우가 아니면) 파일에 넣지 않아서 기존 주소를 덮어쓰지 않아요.
+  const cfg={title:getSiteTitle()}, u=getSubmitUrl();
+  if(u||(draftC&&draftC.submitUrl!==undefined)) cfg.submitUrl=u;
+  return cfg;
+}
+function onTitleInput(){
+  const t=clip($("tSiteTitle").value,40);
+  draftC=Object.assign({},draftC); if(t) draftC.title=t; else delete draftC.title;
+  saveDraftC(); dirty=true; applySiteTitle();
+  tMsg(t?"✔ 제목을 바꿨어요. 다 고쳤으면 ‘🚀 학생에게 적용하기’를 눌러 주세요.":"제목을 비웠어요. (기본 제목이 표시돼요)","ok");
+}
+$("tSiteTitle").addEventListener("input",onTitleInput);
+$("cUrl").addEventListener("input",onConfigInput); $("cUrl").addEventListener("change",onConfigInput);
+$("cTest").onclick=async()=>{
+  const u=$("cUrl").value.trim();
+  if(!SUBMIT_URL_RE.test(u)){ tMsg("먼저 …/exec 로 끝나는 웹 앱 주소를 입력해 주세요.","bad"); return; }
+  tMsg("연결을 확인하는 중이에요...");
+  try{
+    const r=await jsonp(u,{action:"ping"},12000);
+    if(r&&r.ok) tMsg("✔ 연결됐어요! 학생들의 결과를 받을 준비가 됐어요.","ok");
+    else tMsg("연결은 됐지만 응답이 이상해요: "+((r&&r.error)||"알 수 없음"),"bad");
+  }catch(err){
+    tMsg("응답이 없어요. ① 배포할 때 액세스 권한이 ‘모든 사용자’인지 ② 주소가 …/exec 인지 ③ 코드를 고친 뒤 ‘새 버전’으로 다시 배포했는지 확인해 주세요.","bad");
+  }
+};
+$("gsCopy").onclick=async()=>{
+  const ta=$("gsCode");
+  try{ await navigator.clipboard.writeText(ta.value); tMsg("✔ 코드를 복사했어요. Apps Script 편집기에 붙여넣으세요.","ok"); }
+  catch(e){ ta.focus(); ta.select(); tMsg("자동 복사가 안 돼요. 코드 칸에서 전체 선택(Ctrl+A) 후 복사(Ctrl+C) 해 주세요.","bad"); }
+};
+
+/* ============ 시작 ============ */
+applyAll();
+applySiteTitle();
+renderLed();
+renderAll();
+loadRemote();
 </script>
 </body>
 </html>
-
-    
