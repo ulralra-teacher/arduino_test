@@ -128,7 +128,7 @@ th{background:#f1f5fc}
         </div>
       </div>
       <div class="hright">
-        <span class="status on" id="status">코드 붙여넣기 대기</span>
+        <span class="status on" id="status">코드 입력 대기</span>
         <button id="btnEdit" class="gear" type="button" title="선생님 설정" aria-label="선생님 설정">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
         </button>
@@ -171,19 +171,38 @@ th{background:#f1f5fc}
     <!-- 우: 편집기 + 채점 -->
     <div>
       <section class="card">
-        <label for="codeBox" style="margin-top:0">✏️ 아두이노 코드 (IDE에서 작성한 스케치를 붙여넣으세요)</label>
-        <textarea id="codeBox" class="sim" spellcheck="false" style="font-family:ui-monospace,Consolas,monospace;font-size:.9rem;resize:vertical" placeholder="void setup() {
-}
-
-void loop() {
-}"></textarea>
+        <details style="border:1px solid #cfd8e6;border-radius:10px;padding:8px 10px;margin-bottom:12px"><summary style="cursor:pointer"><b>📌 리치쉴드 핀 번호</b></summary>
+          <table style="border-collapse:collapse;font-size:.85rem;margin-top:8px;width:100%"><tbody>
+            <tr><td><b>디지털</b></td><td>K1(RED_B) D4 · K2(BLUE_B) D5 · FND D4, D5 · 부저 D3 · DHT11 D12 · 네오픽셀 D13 · RGB LED D9, D10, D11 · 서보 D6 · 초음파 D7, D8 · IR 수신 D2</td></tr>
+            <tr><td><b>아날로그</b></td><td>조도(LDR) A0 · KNOB A1 · 조이스틱 A2, A3 · 소리(MIC) A4 · 전압센서 A5 · LCD(I2C) A4, A5</td></tr>
+          </tbody></table>
+          <p class="note" style="margin:6px 0 0">FND와 K1·K2 버튼은 D4·D5를 같이 쓰고, LCD와 A4·A5도 겹칩니다. 보드의 선택 스위치(FND/Button, LCD/Variable)를 쓰려는 쪽으로 맞추세요.</p></details>
+        <div id="serPanel" style="border:1px solid #cfd8e6;border-radius:10px;padding:10px;margin-bottom:12px">
+          <div class="row" style="gap:8px;align-items:center;flex-wrap:wrap">
+            <b>🔌 아두이노 직접 연결 (Web Serial)</b>
+            <select id="serBaud"><option>9600</option><option>115200</option></select>
+            <button id="btnSerOn" class="primary">연결</button>
+            <button id="btnSerOff" disabled>끊기</button>
+            <button id="btnSerClr">로그 지우기</button>
+            <span class="status" id="serStat">연결 안 됨</span>
+          </div>
+          <pre id="serLog" style="height:110px;overflow:auto;background:#0f172a;color:#d1fae5;padding:8px;border-radius:8px;margin:8px 0 6px;font-size:.82rem;white-space:pre-wrap"></pre>
+          <label style="display:flex;gap:6px;align-items:center;font-size:.85rem"><input type="checkbox" id="chkNoBoard"> 보드 없이 코드만 채점하기</label>
+          <p class="note" style="margin:6px 0 0">① 아두이노 IDE에서 스케치를 업로드하고 <b>시리얼 모니터는 닫기</b> → ② 속도(baud)를 맞춰 [연결] → ③ 시리얼 출력이 나오면 코드를 입력하고 제출. 업로드할 때는 먼저 [끊기]를 누르세요. (PC의 크롬·엣지에서만 동작)</p>
+        </div>
+        <label for="codeBox" style="margin-top:0">✏️ 아두이노 코드 (직접 입력하세요. IDE 코드를 붙여넣어도 돼요)</label>
+        <div id="edWrap" style="display:flex;border:1px solid #cfd8e6;border-radius:8px;overflow:hidden;background:#fff">
+          <pre id="lineNo" aria-hidden="true" style="margin:0;padding:10px 8px;min-width:38px;text-align:right;background:#f1f5f9;color:#94a3b8;font:14px/1.55 ui-monospace,Consolas,monospace;height:360px;overflow:hidden;user-select:none;box-sizing:border-box">1</pre>
+          <textarea id="codeBox" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" style="flex:1;border:0;outline:0;resize:none;margin:0;padding:10px;height:360px;box-sizing:border-box;font:14px/1.55 ui-monospace,Consolas,monospace;tab-size:2;white-space:pre;overflow:auto;background:#fff;color:#0f172a"></textarea>
+        </div>
         <div class="row" style="margin-top:12px">
           <button id="btnSubmit" class="primary">✔ 제출하고 자동 채점</button>
+          <button id="btnTpl">📄 기본 틀</button>
           <button id="btnClearBlocks">🧹 코드 지우기</button>
           <button id="btnReload">🌐 Wokwi 시뮬레이터 열기</button>
         </div>
         <p id="clearMsg" class="note" role="status"></p>
-        <p class="note">* 주석(//)을 뺀 실제 코드에 필요한 요소가 모두 들어 있는지 검사합니다. 핀 번호는 검사하지 않아요.</p>
+        <p class="note">* 주석(//)을 뺀 실제 코드에 필요한 요소가 모두 들어 있는지 검사합니다. 쉴드 핀 번호(D·A)도 함께 검사합니다.</p>
         <div class="result" id="result"></div>
         <ul class="checks" id="checks"></ul>
       </section>
@@ -422,73 +441,103 @@ const STORE = "ard_grader_v1";
 /* ============ 문항 (필요한 코드 조각을 정규식으로 검사) ============ */
 const S1="[12정01-01] 컴퓨팅 시스템을 구성하는 하드웨어와 소프트웨어의 유기적 관계 및 작동 원리를 이해한다.";
 const S2="[12정01-02] 피지컬 컴퓨팅 시스템을 설계하고 구현하여 실생활의 문제를 창의적으로 해결한다.";
+const PIN={
+  map(code){const m={};const re=/(?:\bconst\s+)?(?:int|byte|uint8_t)\s+(\w+)\s*=\s*(A\d|\d+)\s*[;,]|#define\s+(\w+)\s+(A\d|\d+)\b/g;let r;while((r=re.exec(code))){m[r[1]||r[3]]=r[2]||r[4];}return m;},
+  val(a,m){a=a.trim();return m[a]!==undefined?m[a]:a;},
+  ok(code,fn,want){const m=PIN.map(code),re=new RegExp("\\b"+fn+"\\s*\\(\\s*([^,)]+)","g");let r;while((r=re.exec(code))){if(want.includes(PIN.val(r[1],m)))return true;}return false;},
+  args(code,type){const m=PIN.map(code),r=new RegExp("\\b"+type+"(?:\\s+\\w+)?\\s*\\(([^)]*)\\)").exec(code);return r?r[1].split(",").map(x=>PIN.val(x,m)):[];},
+  an(n){return ["A"+n,""+n,""+(14+n)];}
+};
 const c=(label,re)=>({label,re});
 const cnt=(re,n)=>code=>(code.match(re)||[]).length>=n;
 const Q=(n,level,title,desc,std,exp,steps,checks)=>({id:"Q"+n,level,title,desc,std,exp,steps:steps.split("|"),checks});
 const SETUP=c("setup() 함수 작성",/void\s+setup\s*\(\s*\)/), LOOP=c("loop() 함수 작성",/void\s+loop\s*\(\s*\)/);
 const NP=[c("네오픽셀 라이브러리 포함",/#include\s*<Adafruit_NeoPixel\.h>/),c("Adafruit_NeoPixel 객체 선언",/Adafruit_NeoPixel\s+\w+\s*\(/),c("strip.begin() 호출",/\w+\.begin\(\s*\)/)];
+NP.push({label:"네오픽셀 핀 D13 연결",test:code=>PIN.args(code,"Adafruit_NeoPixel")[1]==="13"});
 const QUESTIONS=[
-Q(1,"기초","[1차시] 시리얼 모니터로 인사하기","setup()에서 시리얼 통신을 시작하고, 시리얼 모니터에 ‘Hello Arduino’를 한 번 출력하세요.",S1,"아두이노 프로그램의 기본 구조(setup/loop)를 설명할 수 있다.","setup()과 loop() 함수 만들기|setup()에서 Serial.begin(9600) 호출|Serial.println(\"Hello Arduino\") 작성",[SETUP,LOOP,c("Serial.begin 호출",/Serial\.begin\(\s*\d+\s*\)/),c("‘Hello Arduino’ 출력",/Serial\.print(ln)?\(\s*"Hello Arduino"/i)]),
-Q(2,"기초","[1차시] 내장 LED 깜빡이기","보드의 내장 LED(LED_BUILTIN)를 1초 간격으로 켰다 끄기를 반복하세요.",S1,"디지털 출력 핀을 설정하고 제어할 수 있다.","setup()에서 pinMode(LED_BUILTIN, OUTPUT)|loop()에서 digitalWrite HIGH|delay(1000) 후 LOW|delay(1000)",[SETUP,LOOP,c("pinMode OUTPUT 설정",/pinMode\(\s*LED_BUILTIN\s*,\s*OUTPUT\s*\)/),c("켜기(HIGH)",/digitalWrite\([^)]*HIGH\s*\)/),c("끄기(LOW)",/digitalWrite\([^)]*LOW\s*\)/),{label:"delay 2번 이상 사용",test:cnt(/delay\(/g,2)}]),
-Q(3,"기초","[1차시] 1초마다 숫자 세기","변수 count를 만들어 1초마다 1씩 증가시키며 시리얼 모니터에 출력하세요.",S1,"변수와 시리얼 출력으로 프로그램의 동작을 확인할 수 있다.","전역 변수 int count = 0 선언|setup()에서 Serial.begin|loop()에서 count 출력|count를 1 증가, delay(1000)",[c("정수 변수 선언",/int\s+count\s*=\s*0/),c("Serial.begin 호출",/Serial\.begin\(/),c("count 출력",/Serial\.print(ln)?\(\s*count\s*\)/),c("count 1 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("delay(1000) 사용",/delay\(\s*1000\s*\)/)]),
-Q(4,"기초","[2차시] 네오픽셀 준비하기","Adafruit_NeoPixel 라이브러리를 포함하고, 핀 번호와 LED 개수를 변수로 선언한 뒤 setup()에서 초기화하세요.",S1,"변수로 하드웨어 설정값을 관리하고 라이브러리 객체를 초기화할 수 있다.","#include로 라이브러리 포함|const int 변수로 핀·개수 선언|Adafruit_NeoPixel 객체 만들기|setup()에서 begin() 호출",[...NP,c("핀/개수를 변수로 선언",/(const\s+)?int\s+\w+\s*=\s*\d+\s*;/)]),
-Q(5,"기초","[2차시] 첫 번째 LED 빨강 켜기","네오픽셀 0번 LED를 빨간색으로 켜세요.",S1,"setPixelColor와 show()의 역할을 구분할 수 있다.","네오픽셀 초기화|setPixelColor(0, Color(255,0,0))|show()로 화면에 반영",[...NP,c("setPixelColor 사용",/\.setPixelColor\(\s*0\s*,/),c("Color(255,0,0) 사용",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(6,"중급","[2차시] 변수로 색 바꾸기","int 변수 r, g, b에 색 값을 저장해 0번 LED를 원하는 색으로 켜고, setBrightness로 밝기를 낮추세요.",S2,"변수를 이용해 출력 값을 바꿀 수 있다.","int r, g, b 변수 선언|setBrightness로 밝기 설정|Color(r, g, b)로 색 지정|show()",[...NP,c("r, g, b 변수 선언",/int\s+r\b[\s\S]*int\s+g\b[\s\S]*int\s+b\b|int\s+r\s*=[^;]*,\s*g\s*=[^;]*,\s*b\s*=/),c("변수로 Color 지정",/Color\(\s*r\s*,\s*g\s*,\s*b\s*\)/),c("밝기 설정",/\.setBrightness\(/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(7,"기초","[3차시] K1을 누르면 켜기","K1 버튼을 누르고 있는 동안만 0번 네오픽셀 LED가 켜지게 하세요. (핀 번호는 쉴드 핀맵에서 확인해 const int로 선언)",S1,"입력 장치의 값을 읽고 조건문으로 출력을 제어할 수 있다.","K1 핀 번호를 const int로 선언|pinMode(핀, INPUT 또는 INPUT_PULLUP)|digitalRead로 버튼 읽기|if-else로 켜기/끄기",[...NP,c("버튼 핀 입력 설정",/pinMode\([^)]*INPUT/),c("digitalRead 사용",/digitalRead\(/),c("if 조건문 사용",/if\s*\(/),c("else 사용",/else/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(8,"중급","[3차시] K1 켜기 / K2 끄기","K1을 누르면 LED가 켜지고, K2를 누르면 꺼지게 하세요. (누른 뒤 손을 떼도 상태 유지)",S2,"버튼 2개와 else if로 상태를 전환하는 프로그램을 만들 수 있다.","버튼 핀 2개 선언 및 입력 설정|if(K1) → 켜기|else if(K2) → 끄기|show()",[...NP,{label:"digitalRead 2번 이상",test:cnt(/digitalRead\(/g,2)},c("else if 사용",/else\s+if\s*\(/),c("켜기(Color 사용)",/Color\(/),c("끄기(clear 또는 0,0,0)",/\.clear\(\s*\)|Color\(\s*0\s*,\s*0\s*,\s*0\s*\)/)]),
-Q(9,"중급","[3차시] 버튼별 색 바꾸기","K1은 빨강, K2는 파랑, 아무것도 안 누르면 꺼짐이 되도록 if / else if / else를 모두 사용하세요.",S2,"다중 선택 구조로 입력별 동작을 설계할 수 있다.","K1이면 빨강|else if K2이면 파랑|else 모두 끄기|show()",[...NP,c("if / else if / else 사용",/if\s*\([\s\S]*else\s+if\s*\([\s\S]*else\s*\{/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("파랑 Color(0,0,255)",/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/),{label:"digitalRead 2번 이상",test:cnt(/digitalRead\(/g,2)}]),
-Q(10,"기초","[4차시] for문으로 8개 모두 켜기","for 반복문으로 네오픽셀 8개를 모두 같은 색으로 켜세요.",S1,"반복문으로 여러 LED를 한 번에 제어할 수 있다.","네오픽셀 초기화(개수 8)|for(int i=0; i<8; i++)|setPixelColor(i, 색)|반복 후 show()",[...NP,c("for 반복문 사용",/for\s*\(\s*int\s+\w+\s*=\s*0\s*;[^;]*;[^)]*\)/),c("반복 변수를 LED 번호로 사용",/setPixelColor\(\s*(i|j|k|n|idx)\s*,/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(11,"중급","[4차시] 차례대로 켜지는 불빛","for문 안에서 LED를 한 개씩 차례로 켜고 delay로 간격을 주세요. 한 바퀴가 끝나면 모두 끄고 다시 시작합니다.",S2,"반복문과 시간 지연으로 애니메이션 효과를 만들 수 있다.","loop() 안에 for 반복|setPixelColor + show() + delay|반복이 끝나면 clear() 후 show()",[...NP,LOOP,c("for 반복문 사용",/for\s*\(\s*int\s+\w+\s*=/),c("delay 사용",/delay\(/),c("clear() 사용",/\.clear\(\s*\)/),{label:"show()를 반복 안에서 호출",test:code=>/for\s*\([\s\S]*?\{[\s\S]*?\.show\(/.test(code)}]),
+Q(1,"기초","[1차시] 시리얼 모니터로 인사하기","setup()에서 시리얼 통신을 시작하고, 시리얼 모니터에 ‘Hello Arduino’를 한 번 출력하세요.",S1,"아두이노 프로그램의 기본 구조(setup/loop)를 설명할 수 있다.","setup()과 loop() 함수 만들기|setup()에서 Serial.begin(9600); 호출|Serial.println(\"Hello Arduino\"); 작성",[SETUP,LOOP,c("Serial.begin 호출",/Serial\.begin\(\s*\d+\s*\)/),c("‘Hello Arduino’ 출력",/Serial\.print(ln)?\(\s*"Hello Arduino"/i)]),
+Q(2,"기초","[1차시] 내장 LED 깜빡이기","보드의 내장 LED(LED_BUILTIN)를 1초 간격으로 켰다 끄기를 반복하세요.",S1,"디지털 출력 핀을 설정하고 제어할 수 있다.","setup()에서 pinMode(LED_BUILTIN, OUTPUT);|loop()에서 digitalWrite(LED_BUILTIN, HIGH);|delay(1000); 후 digitalWrite(LED_BUILTIN, LOW);|delay(1000);",[SETUP,LOOP,c("pinMode OUTPUT 설정",/pinMode\(\s*LED_BUILTIN\s*,\s*OUTPUT\s*\)/),c("켜기(HIGH)",/digitalWrite\([^)]*HIGH\s*\)/),c("끄기(LOW)",/digitalWrite\([^)]*LOW\s*\)/),{label:"delay 2번 이상 사용",test:cnt(/delay\(/g,2)}]),
+Q(3,"기초","[1차시] 1초마다 숫자 세기","변수 count를 만들어 1초마다 1씩 증가시키며 시리얼 모니터에 출력하세요.",S1,"변수와 시리얼 출력으로 프로그램의 동작을 확인할 수 있다.","전역 변수 int count = 0; 선언|setup()에서 Serial.begin(9600);|loop()에서 Serial.println(count); 로 count 출력|count++; 로 1 증가, delay(1000);",[c("정수 변수 선언",/int\s+count\s*=\s*0/),c("Serial.begin 호출",/Serial\.begin\(/),c("count 출력",/Serial\.print(ln)?\(\s*count\s*\)/),c("count 1 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("delay(1000) 사용",/delay\(\s*1000\s*\)/)]),
+Q(4,"기초","[2차시] 네오픽셀 준비하기","Adafruit_NeoPixel 라이브러리를 포함하고, 핀 번호(D13)와 LED 개수(8)를 변수로 선언한 뒤 setup()에서 초기화하세요.",S1,"변수로 하드웨어 설정값을 관리하고 라이브러리 객체를 초기화할 수 있다.","#include로 라이브러리 포함|const int 변수로 핀·개수 선언|Adafruit_NeoPixel 객체(LED 8개, 핀 D13) 만들기|setup()에서 begin(); 호출",[...NP,c("핀/개수를 변수로 선언",/(const\s+)?int\s+\w+\s*=\s*\d+\s*;/)]),
+Q(5,"기초","[2차시] 첫 번째 LED 빨강 켜기","네오픽셀 0번 LED를 빨간색으로 켜세요.",S1,"setPixelColor와 show()의 역할을 구분할 수 있다.","네오픽셀 초기화|setPixelColor(0, Color(255,0,0));|show(); 로 화면에 반영",[...NP,c("setPixelColor 사용",/\.setPixelColor\(\s*0\s*,/),c("Color(255,0,0) 사용",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(6,"중급","[2차시] 변수로 색 바꾸기","int 변수 r, g, b에 색 값을 저장해 0번 LED를 원하는 색으로 켜고, setBrightness로 밝기를 낮추세요.",S2,"변수를 이용해 출력 값을 바꿀 수 있다.","int r, g, b; 변수 선언|setBrightness(값); 로 밝기 설정|setPixelColor(0, Color(r, g, b)); 로 색 지정|show();",[...NP,c("r, g, b 변수 선언",/int\s+r\b[\s\S]*int\s+g\b[\s\S]*int\s+b\b|int\s+r\s*=[^;]*,\s*g\s*=[^;]*,\s*b\s*=/),c("변수로 Color 지정",/Color\(\s*r\s*,\s*g\s*,\s*b\s*\)/),c("밝기 설정",/\.setBrightness\(/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(7,"기초","[3차시] K1을 누르면 켜기","K1 버튼을 누르고 있는 동안만 0번 네오픽셀 LED가 켜지게 하세요. (K1은 D4, 핀 번호는 const int로 선언)",S1,"입력 장치의 값을 읽고 조건문으로 출력을 제어할 수 있다.","K1 핀(D4)을 const int로 선언|pinMode(4, INPUT 또는 INPUT_PULLUP);|digitalRead(4); 로 버튼 읽기|if-else로 켜기/끄기",[...NP,c("버튼 핀 입력 설정",/pinMode\([^)]*INPUT/),c("digitalRead 사용",/digitalRead\(/),c("if 조건문 사용",/if\s*\(/),c("else 사용",/else/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(8,"중급","[3차시] K1 켜기 / K2 끄기","K1을 누르면 LED가 켜지고, K2를 누르면 꺼지게 하세요. (누른 뒤 손을 떼도 상태 유지)",S2,"버튼 2개와 else if로 상태를 전환하는 프로그램을 만들 수 있다.","버튼 핀(D4, D5) 선언 및 입력 설정|if(K1) → 켜기|else if(K2) → 끄기|show();",[...NP,{label:"digitalRead 2번 이상",test:cnt(/digitalRead\(/g,2)},c("else if 사용",/else\s+if\s*\(/),c("켜기(Color 사용)",/Color\(/),c("끄기(clear 또는 0,0,0)",/\.clear\(\s*\)|Color\(\s*0\s*,\s*0\s*,\s*0\s*\)/)]),
+Q(9,"중급","[3차시] 버튼별 색 바꾸기","K1은 빨강, K2는 파랑, 아무것도 안 누르면 꺼짐이 되도록 if / else if / else를 모두 사용하세요.",S2,"다중 선택 구조로 입력별 동작을 설계할 수 있다.","K1이면 빨강|else if K2이면 파랑|else 모두 끄기|show();",[...NP,c("if / else if / else 사용",/if\s*\([\s\S]*else\s+if\s*\([\s\S]*else\s*\{/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("파랑 Color(0,0,255)",/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/),{label:"digitalRead 2번 이상",test:cnt(/digitalRead\(/g,2)}]),
+Q(10,"기초","[4차시] for문으로 8개 모두 켜기","for 반복문으로 네오픽셀 8개를 모두 같은 색으로 켜세요.",S1,"반복문으로 여러 LED를 한 번에 제어할 수 있다.","네오픽셀 초기화(개수 8)|for(int i=0; i<8; i++)|setPixelColor(i, 색);|반복 후 show();",[...NP,c("for 반복문 사용",/for\s*\(\s*int\s+\w+\s*=\s*0\s*;[^;]*;[^)]*\)/),c("반복 변수를 LED 번호로 사용",/setPixelColor\(\s*(i|j|k|n|idx)\s*,/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(11,"중급","[4차시] 차례대로 켜지는 불빛","for문 안에서 LED를 한 개씩 차례로 켜고 delay로 간격을 주세요. 한 바퀴가 끝나면 모두 끄고 다시 시작합니다.",S2,"반복문과 시간 지연으로 애니메이션 효과를 만들 수 있다.","loop() 안에 for 반복|setPixelColor(i, 색); show(); delay(100);|반복이 끝나면 clear(); 후 show();",[...NP,LOOP,c("for 반복문 사용",/for\s*\(\s*int\s+\w+\s*=/),c("delay 사용",/delay\(/),c("clear() 사용",/\.clear\(\s*\)/),{label:"show()를 반복 안에서 호출",test:code=>/for\s*\([\s\S]*?\{[\s\S]*?\.show\(/.test(code)}]),
 Q(12,"고급","[4차시] 왼쪽↔오른쪽 왕복 효과","for문 2개를 사용해 불빛이 0번→7번, 7번→0번으로 왕복하게 만드세요. (감소하는 for문 포함)",S2,"증가·감소 반복문을 조합해 패턴을 만들 수 있다.","증가 for: i=0; i<8; i++|감소 for: i=7; i>=0; i--|각 반복에서 한 칸만 켜기|delay로 속도 조절",[...NP,{label:"for 반복문 2개 이상",test:cnt(/for\s*\(\s*int\s/g,2)},c("감소 반복(i--)",/\w+\s*--|\w+\s*-=\s*1/),c("clear() 사용",/\.clear\(\s*\)/),c("delay 사용",/delay\(/)]),
-Q(13,"기초","[5차시] 함수로 삑 소리 내기","beep()라는 사용자 정의 함수를 만들어 부저로 소리를 내고, loop()에서 호출하세요.",S1,"함수를 정의하고 호출하는 방법을 이해한다.","부저 핀을 const int로 선언|void beep() 함수 정의|함수 안에서 tone(핀, 주파수, 시간)|loop()에서 beep() 호출",[c("함수 정의 void beep()",/void\s+beep\s*\(\s*\)/),c("tone() 사용",/tone\(/),c("beep() 호출",/\bbeep\s*\(\s*\)\s*;/),c("delay 사용",/delay\(/)]),
-Q(14,"중급","[5차시] 매개변수가 있는 함수","playNote(int freq, int ms) 함수를 만들어 주파수와 길이를 바꿔 가며 호출하세요.",S2,"매개변수로 함수의 동작을 바꿀 수 있다.","void playNote(int freq, int ms) 정의|함수 안에서 tone, delay|서로 다른 값으로 2번 이상 호출",[c("매개변수 2개 함수 정의",/void\s+playNote\s*\(\s*int\s+\w+\s*,\s*int\s+\w+\s*\)/),c("tone() 사용",/tone\(/),{label:"playNote 호출 2번 이상",test:cnt(/\bplayNote\s*\(/g,3)}]),
-Q(15,"고급","[5차시] 도레미파 연주하기","playNote 함수로 도(262)·레(294)·미(330)·파(349)를 순서대로 연주하세요.",S2,"함수를 재사용해 멜로디를 구현할 수 있다.","음계 주파수 4개 확인|playNote 함수 정의|loop() 또는 setup()에서 4번 호출|음 사이에 짧은 쉼(noTone/delay)",[c("매개변수 있는 함수 정의",/void\s+\w+\s*\(\s*int\s+\w+\s*,\s*int\s+\w+\s*\)/),c("tone() 사용",/tone\(/),{label:"4개 이상의 서로 다른 음 사용",test:code=>new Set((code.match(/\b(2[0-9]{2}|3[0-9]{2}|5[0-9]{2})\b/g)||[])).size>=4},{label:"함수 호출 4번 이상",test:code=>{const m=code.match(/void\s+(\w+)\s*\(\s*int\s+\w+\s*,\s*int/);return !!m&&(code.match(new RegExp("\\b"+m[1]+"\\s*\\(","g"))||[]).length>=5;}}]),
-Q(16,"기초","[6차시] KNOB 값 읽기","KNOB을 돌릴 때의 아날로그 값을 0.2초마다 시리얼 모니터에 출력하세요. (핀 번호는 핀맵에서 확인)",S1,"아날로그 입력값(0~1023)을 읽어 확인할 수 있다.","KNOB 핀을 const int로 선언|Serial.begin(9600)|analogRead로 값 읽기|Serial.println 후 delay(200)",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("읽은 값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
+Q(13,"기초","[5차시] 함수로 삑 소리 내기","beep()라는 사용자 정의 함수를 만들어 부저로 소리를 내고, loop()에서 호출하세요.",S1,"함수를 정의하고 호출하는 방법을 이해한다.","부저 핀(D3)을 const int로 선언|void beep() 함수 정의|함수 안에서 tone(3, 주파수, 시간);|loop()에서 beep(); 호출",[c("함수 정의 void beep()",/void\s+beep\s*\(\s*\)/),c("tone() 사용",/tone\(/),c("beep() 호출",/\bbeep\s*\(\s*\)\s*;/),c("delay 사용",/delay\(/)]),
+Q(14,"중급","[5차시] 매개변수가 있는 함수","playNote(int freq, int ms) 함수를 만들어 주파수와 길이를 바꿔 가며 호출하세요.",S2,"매개변수로 함수의 동작을 바꿀 수 있다.","void playNote(int freq, int ms) 정의|함수 안에서 tone(3, freq, ms); delay(ms);|서로 다른 값으로 2번 이상 호출",[c("매개변수 2개 함수 정의",/void\s+playNote\s*\(\s*int\s+\w+\s*,\s*int\s+\w+\s*\)/),c("tone() 사용",/tone\(/),{label:"playNote 호출 2번 이상",test:cnt(/\bplayNote\s*\(/g,3)}]),
+Q(15,"고급","[5차시] 도레미파 연주하기","playNote 함수로 도(262)·레(294)·미(330)·파(349)를 순서대로 연주하세요.",S2,"함수를 재사용해 멜로디를 구현할 수 있다.","음계 주파수 4개 확인|playNote 함수 정의|loop() 또는 setup()에서 4번 호출|음 사이에 짧은 쉼(noTone(3); / delay(50);)",[c("매개변수 있는 함수 정의",/void\s+\w+\s*\(\s*int\s+\w+\s*,\s*int\s+\w+\s*\)/),c("tone() 사용",/tone\(/),{label:"4개 이상의 서로 다른 음 사용",test:code=>new Set((code.match(/\b(2[0-9]{2}|3[0-9]{2}|5[0-9]{2})\b/g)||[])).size>=4},{label:"함수 호출 4번 이상",test:code=>{const m=code.match(/void\s+(\w+)\s*\(\s*int\s+\w+\s*,\s*int/);return !!m&&(code.match(new RegExp("\\b"+m[1]+"\\s*\\(","g"))||[]).length>=5;}}]),
+Q(16,"기초","[6차시] KNOB 값 읽기","KNOB을 돌릴 때의 아날로그 값을 0.2초마다 시리얼 모니터에 출력하세요. (KNOB = A1)",S1,"아날로그 입력값(0~1023)을 읽어 확인할 수 있다.","KNOB 핀(A1)을 const int로 선언|Serial.begin(9600);|analogRead로 값 읽기|Serial.println(값); 후 delay(200);",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("읽은 값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
 Q(17,"중급","[6차시] 3단계로 나누기","KNOB 값이 341 미만이면 LOW, 682 미만이면 MID, 그 외는 HIGH를 시리얼 모니터에 출력하세요.",S2,"아날로그 값을 구간별 조건문으로 분류할 수 있다.","analogRead 값을 변수에 저장|if / else if / else로 구간 나누기|구간별 문자열 출력",[c("analogRead 사용",/analogRead\(/),c("if / else if / else 사용",/if\s*\([\s\S]*else\s+if\s*\([\s\S]*else\s*\{?/),c("LOW, MID, HIGH 출력",/"LOW"[\s\S]*"MID"[\s\S]*"HIGH"|"LOW"[\s\S]*"HIGH"[\s\S]*"MID"/),c("Serial.println 사용",/Serial\.println\(/)]),
-Q(18,"고급","[6차시] 최댓값·최솟값 기록","KNOB 값을 계속 읽으며 지금까지의 최댓값(maxVal)과 최솟값(minVal)을 변수에 기록하고 시리얼 모니터에 출력하세요.",S2,"변수를 비교·갱신하여 데이터를 기록할 수 있다.","maxVal=0, minVal=1023으로 시작|값이 maxVal보다 크면 갱신|값이 minVal보다 작으면 갱신|두 값 출력",[c("maxVal 변수",/int\s+maxVal\s*=/),c("minVal 변수",/int\s+minVal\s*=/),c("analogRead 사용",/analogRead\(/),{label:"if 조건문 2개 이상",test:cnt(/\bif\s*\(/g,2)},c("Serial 출력",/Serial\.print/)]),
-Q(19,"기초","[7차시] map으로 범위 바꾸기","KNOB 값(0~1023)을 map()으로 0~255로 바꿔 시리얼 모니터에 출력하세요.",S1,"map() 함수로 값의 범위를 변환할 수 있다.","analogRead 값 저장|map(값, 0, 1023, 0, 255) 사용|변환한 값 출력",[c("analogRead 사용",/analogRead\(/),c("map(값,0,1023,0,255)",/map\(\s*\w+\s*,\s*0\s*,\s*1023\s*,\s*0\s*,\s*255\s*\)/),c("Serial 출력",/Serial\.print/)]),
-Q(20,"중급","[7차시] KNOB으로 밝기 조절","KNOB을 돌려 네오픽셀 8개의 밝기를 0~255로 조절하세요.",S2,"센서 값을 변환해 출력 장치에 연결할 수 있다.","네오픽셀 초기화|analogRead 후 map으로 0~255 변환|setBrightness 적용|for로 8개 켜고 show()",[...NP,c("analogRead 사용",/analogRead\(/),c("map 사용",/map\(/),c("setBrightness 사용",/\.setBrightness\(/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(21,"고급","[7차시] KNOB으로 켜지는 개수 조절","KNOB 값을 0~8로 변환해 그 개수만큼 네오픽셀이 왼쪽부터 켜지게 하세요. (볼륨 막대 효과)",S2,"변환한 값을 반복문의 횟수로 활용할 수 있다.","map(값,0,1023,0,8)로 개수 구하기|clear()로 모두 끄기|for로 개수만큼 켜기|show()",[...NP,c("map 0~8 변환",/map\(\s*\w+\s*,\s*0\s*,\s*1023\s*,\s*0\s*,\s*8\s*\)/),c("for 반복문 사용",/for\s*\(\s*int\s/),c("clear() 사용",/\.clear\(\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(22,"기초","[8차시] 조도 값 읽기","LDR(조도 센서) 값을 읽어 시리얼 모니터에 출력하세요. 손으로 가렸을 때 값이 어떻게 변하는지 관찰합니다.",S1,"센서의 아날로그 값 변화로 작동 원리를 설명할 수 있다.","LDR 핀을 const int로 선언|analogRead로 값 읽기|Serial.println 출력, delay",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
-Q(23,"중급","[8차시] 어두우면 켜지는 LED","기준값을 변수로 정하고, LDR 값이 기준보다 낮으면(어두우면) 네오픽셀을 켜고 아니면 끄세요.",S2,"기준값을 이용한 조건 제어를 구현할 수 있다.","기준값 변수 선언|analogRead로 조도 읽기|if (조도 < 기준)이면 켜기, else 끄기|show()",[...NP,c("기준값 변수 선언",/(const\s+)?int\s+\w*(th|limit|dark|기준)\w*\s*=\s*\d+|(const\s+)?int\s+\w+\s*=\s*\d{2,4}\s*;/i),c("analogRead 사용",/analogRead\(/),c("조건문 if / else",/if\s*\([^)]*<[^)]*\)[\s\S]*else/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(24,"고급","[8차시] 스마트 가로등","주변이 어두울수록 네오픽셀이 더 밝게 켜지도록 하세요. (조도 값 → 밝기 값을 거꾸로 map)",S2,"센서 값을 반비례로 변환해 자동 제어 시스템을 만들 수 있다.","조도 읽기|map(값, 0, 1023, 255, 0)|setBrightness 적용|8개 모두 켜고 show()",[...NP,c("analogRead 사용",/analogRead\(/),c("거꾸로 map (255→0)",/map\([^)]*,\s*255\s*,\s*0\s*\)/),c("setBrightness 사용",/\.setBrightness\(/),c("for 반복문 사용",/for\s*\(\s*int\s/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(25,"기초","[9차시] 소리 크기 읽기","마이크(MIC) 값을 읽어 시리얼 모니터에 출력하세요. 박수를 칠 때 값의 변화를 관찰합니다.",S1,"소리 센서의 입력 값을 확인할 수 있다.","MIC 핀을 const int로 선언|analogRead로 값 읽기|Serial.println 출력, delay(100)",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
-Q(26,"중급","[9차시] 박수 경보기","소리 값이 기준값보다 크면 부저가 울리고, 아니면 멈추게 하세요.",S2,"센서 값에 따라 부저를 제어하는 경보기를 만들 수 있다.","기준값 변수 선언|analogRead로 소리 읽기|if 크면 tone()|else noTone()",[c("analogRead 사용",/analogRead\(/),c("if 조건문",/if\s*\([^)]*>[^)]*\)/),c("tone() 사용",/tone\(/),c("noTone() 사용",/noTone\(/)]),
-Q(27,"고급","[9차시] 박수 횟수 세기","박수 소리가 감지될 때마다 count를 1 늘려 시리얼 모니터에 출력하세요. 한 번의 박수가 여러 번 세어지지 않도록 delay를 넣으세요.",S2,"한 번의 입력을 한 번만 세도록 처리할 수 있다.","count 변수 선언|analogRead로 소리 읽기|기준 초과 시 count 1 증가|delay로 중복 방지, 출력",[c("count 변수 선언",/int\s+count\s*=\s*0/),c("analogRead 사용",/analogRead\(/),c("count 1 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("if 조건문",/\bif\s*\(/),c("delay 사용",/delay\(/),c("count 출력",/Serial\.print(ln)?\(\s*count\s*\)/)]),
-Q(28,"기초","[10차시] 조이스틱 X·Y 읽기","조이스틱의 X축, Y축 값을 함께 읽어 시리얼 모니터에 출력하세요.",S1,"2차원 좌표 입력의 원리를 설명할 수 있다.","X, Y 핀을 const int로 선언|analogRead 2번|X와 Y를 한 줄에 출력|delay",[c("Serial.begin 호출",/Serial\.begin\(/),{label:"analogRead 2번 이상",test:cnt(/analogRead\(/g,2)},{label:"Serial.print 2번 이상",test:cnt(/Serial\.print/g,2)},c("delay 사용",/delay\(/)]),
-Q(29,"중급","[10차시] 조이스틱으로 LED 이동","조이스틱을 좌우로 움직이면 불이 켜진 네오픽셀 위치(pos)가 한 칸씩 이동하게 하세요. 0~7 범위를 벗어나지 않게 합니다.",S2,"입력값으로 위치 변수를 바꾸고 범위를 제한할 수 있다.","pos 변수 선언|X값이 크면 pos 증가, 작으면 pos 감소|범위 제한(constrain 또는 if)|clear 후 pos 위치만 켜기",[...NP,c("pos 변수",/int\s+pos\s*=/),c("analogRead 사용",/analogRead\(/),c("pos 증가/감소",/pos\s*(\+\+|--|\+=|-=)|pos\s*=\s*pos\s*[+-]/),c("범위 제한",/constrain\(|pos\s*[<>]=?\s*\d/),c("setPixelColor(pos…)",/setPixelColor\(\s*pos\s*,/)]),
-Q(30,"고급","[10차시] 위치 이동 + 색 바꾸기","조이스틱으로 불빛을 좌우로 이동시키고, 조이스틱 스위치(누름)를 누를 때마다 색이 빨강→초록→파랑으로 바뀌게 하세요.",S2,"아날로그·디지털 입력을 함께 사용해 인터랙티브 시스템을 구현할 수 있다.","스위치 핀 입력 설정|색 번호 변수(colorIdx) 선언|스위치가 눌리면 colorIdx 변경|pos 위치에 해당 색으로 켜기",[...NP,c("스위치 입력 설정",/pinMode\([^)]*INPUT/),c("digitalRead 사용",/digitalRead\(/),c("analogRead 사용",/analogRead\(/),c("색 번호 변수",/int\s+color\w*\s*=/i),{label:"색 3가지 사용(빨강·초록·파랑)",test:code=>/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/.test(code)&&/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/.test(code)&&/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/.test(code)}]),
-Q(31,"기초","[11차시] 라이브러리로 DHT11 준비","DHT 센서 라이브러리를 포함하고, 객체를 선언한 뒤 setup()에서 시작하세요. (핀 번호는 핀맵에서 확인)",S1,"외부 라이브러리를 포함하고 객체를 초기화할 수 있다.","#include로 DHT 라이브러리 포함|DHT dht(핀, DHT11) 선언|setup()에서 dht.begin()",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("DHT 객체 선언(DHT11)",/DHT\s+\w+\s*\([^)]*DHT11\s*\)/),c("begin() 호출",/\w+\.begin\(\s*\)/)]),
-Q(32,"중급","[11차시] 현재 온도 출력","DHT11으로 온도를 읽어 시리얼 모니터에 출력하세요. (측정 간격은 2초 이상)",S2,"센서 라이브러리 함수로 측정값을 읽을 수 있다.","DHT 초기화|readTemperature()로 온도 읽기|Serial.println 출력|delay(2000)",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("readTemperature 사용",/\.readTemperature\(/),c("Serial 출력",/Serial\.print/),c("delay 2000 이상",/delay\(\s*([2-9]\d{3}|\d{5,})\s*\)/)]),
-Q(33,"고급","[11차시] 온습도 읽고 오류 처리","온도와 습도를 모두 읽고, isnan()으로 읽기 실패를 확인하세요. 온도가 28도 이상이면 ‘HOT’을 출력하세요.",S2,"측정 오류를 처리하고 조건에 따라 판단할 수 있다.","readTemperature, readHumidity 호출|isnan으로 실패 확인|if (온도 >= 28) 이면 HOT 출력|값 출력",[c("readTemperature 사용",/\.readTemperature\(/),c("readHumidity 사용",/\.readHumidity\(/),c("isnan 사용",/isnan\(/),c("if 조건문",/\bif\s*\(/),c("‘HOT’ 출력",/"HOT"/)]),
-Q(34,"기초","[12차시] 7세그먼트에 1234 출력","4자리 디스플레이 라이브러리를 포함하고 객체를 만든 뒤 숫자 1234를 표시하세요. (CLK, DIO 핀은 핀맵 확인)",S1,"FND 디스플레이의 구조를 이해하고 숫자를 출력할 수 있다.","디스플레이 라이브러리 포함|CLK, DIO 핀 선언 후 객체 생성|밝기 설정|1234 표시",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("디스플레이 객체 선언",/TM1637\w*\s+\w+\s*\(/),c("숫자 출력 함수 호출",/\.(showNumberDec\w*|display)\(/),c("1234 사용",/\b1234\b/)]),
-Q(35,"중급","[12차시] 1초마다 올라가는 숫자","디스플레이에 0부터 시작해 1초마다 1씩 커지는 숫자를 표시하세요. 9999 다음에는 0으로 돌아갑니다.",S2,"변수 값을 디스플레이로 출력하고 범위를 제한할 수 있다.","count 변수 선언|디스플레이에 count 표시|count 1 증가, 9999 초과 시 0|delay(1000)",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("count 변수",/int\s+count\s*=\s*0/),c("count 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("9999 범위 처리",/9999/),c("delay(1000)",/delay\(\s*1000\s*\)/)]),
-Q(36,"고급","[12차시] K1 증가 / K2 감소","K1을 누르면 숫자가 1 증가, K2를 누르면 1 감소하며 디스플레이에 표시하세요. (0~9999 범위 유지)",S2,"입력 장치와 출력 장치를 연결한 시스템을 구현할 수 있다.","K1, K2 입력 설정|누르면 count 증가/감소|범위 제한(constrain 또는 if)|디스플레이 표시",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),{label:"digitalRead 2번 이상",test:cnt(/digitalRead\(/g,2)},c("증가와 감소 모두 사용",/\+\+|\+=\s*1/),c("감소 사용",/--|-=\s*1/),c("범위 제한",/constrain\(|count\s*[<>]=?\s*\d/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/)]),
-Q(37,"기초","[13차시] 온도를 디스플레이에 표시","DHT11으로 읽은 온도를 7세그먼트 디스플레이에 표시하세요.",S1,"센서 데이터를 시각화 장치로 출력할 수 있다.","DHT와 디스플레이 라이브러리 포함|readTemperature로 읽기|정수로 바꿔 표시|delay",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("readTemperature 사용",/\.readTemperature\(/),c("디스플레이 출력",/\.(showNumberDec\w*|display)\(/)]),
-Q(38,"중급","[13차시] 온도·습도 번갈아 표시","3초마다 온도와 습도가 번갈아 디스플레이에 표시되게 하세요.",S2,"데이터를 시간 간격에 따라 순차적으로 시각화할 수 있다.","온도 읽어 표시|delay(3000)|습도 읽어 표시|delay(3000)",[c("readTemperature 사용",/\.readTemperature\(/),c("readHumidity 사용",/\.readHumidity\(/),{label:"디스플레이 출력 2번 이상",test:cnt(/\.(showNumberDec\w*|display)\(/g,2)},{label:"3초 대기 2번 이상",test:cnt(/delay\(\s*3000\s*\)/g,2)}]),
-Q(39,"고급","[13차시] K1로 온도/습도 전환","K1을 누를 때마다 표시 모드(mode)가 온도 ↔ 습도로 바뀌게 하세요. 누르고 있는 동안 여러 번 바뀌지 않도록 하세요.",S2,"상태 변수로 화면 모드를 전환하는 프로그램을 설계할 수 있다.","mode 변수 선언|K1을 누른 순간에만 mode 전환|mode에 따라 온도 또는 습도 표시",[c("mode 변수",/(int|bool|boolean)\s+mode\w*\s*=/i),c("digitalRead 사용",/digitalRead\(/),c("모드 전환",/mode\w*\s*=\s*!|mode\w*\s*=\s*1\s*-|mode\w*\s*=\s*\(?\s*mode\w*\s*\+\s*1|mode\w*\s*\^=|mode\w*\s*=\s*\w+\s*\?/i),c("온도·습도 모두 사용",/readTemperature\([\s\S]*readHumidity\(|readHumidity\([\s\S]*readTemperature\(/),c("if / else 사용",/if\s*\([\s\S]*else/)]),
-Q(40,"기초","[14차시] 리모컨 신호 받기","적외선 수신 라이브러리를 시작하고, 리모컨 버튼을 누르면 수신 여부를 시리얼 모니터에 출력하세요. (핀 번호는 핀맵 확인)",S1,"적외선 통신의 수신 과정을 설명할 수 있다.","IRremote 라이브러리 포함|수신기 시작|decode()로 신호 확인|Serial 출력",[c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("Serial.begin 호출",/Serial\.begin\(/),c("decode 사용",/\.decode\(/),c("Serial 출력",/Serial\.print/)]),
-Q(41,"중급","[14차시] 버튼 코드값 확인","리모컨 버튼의 고유 코드를 16진수(HEX)로 시리얼 모니터에 출력하세요.",S2,"수신한 데이터를 16진수로 확인하고 해석할 수 있다.","신호 수신(decode)|수신값을 HEX 형식으로 출력|다음 신호 받을 준비(resume)",[c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("decode 사용",/\.decode\(/),c("HEX 형식 출력",/Serial\.print(ln)?\([^;]*,\s*HEX\s*\)/),c("수신 재개(resume)",/\.resume\(/)]),
+Q(18,"고급","[6차시] 최댓값·최솟값 기록","KNOB 값을 계속 읽으며 지금까지의 최댓값(maxVal)과 최솟값(minVal)을 변수에 기록하고 시리얼 모니터에 출력하세요.",S2,"변수를 비교·갱신하여 데이터를 기록할 수 있다.","int maxVal = 0; int minVal = 1023; 으로 시작|값이 maxVal보다 크면 갱신|값이 minVal보다 작으면 갱신|두 값 출력",[c("maxVal 변수",/int\s+maxVal\s*=/),c("minVal 변수",/int\s+minVal\s*=/),c("analogRead 사용",/analogRead\(/),{label:"if 조건문 2개 이상",test:cnt(/\bif\s*\(/g,2)},c("Serial 출력",/Serial\.print/)]),
+Q(19,"기초","[7차시] map으로 범위 바꾸기","KNOB 값(0~1023)을 map()으로 0~255로 바꿔 시리얼 모니터에 출력하세요.",S1,"map() 함수로 값의 범위를 변환할 수 있다.","analogRead 값 저장|map(값, 0, 1023, 0, 255); 사용|변환한 값 출력",[c("analogRead 사용",/analogRead\(/),c("map(값,0,1023,0,255)",/map\(\s*\w+\s*,\s*0\s*,\s*1023\s*,\s*0\s*,\s*255\s*\)/),c("Serial 출력",/Serial\.print/)]),
+Q(20,"중급","[7차시] KNOB으로 밝기 조절","KNOB을 돌려 네오픽셀 8개의 밝기를 0~255로 조절하세요.",S2,"센서 값을 변환해 출력 장치에 연결할 수 있다.","네오픽셀 초기화|analogRead 후 map으로 0~255 변환|setBrightness 적용|for로 8개 켜고 show();",[...NP,c("analogRead 사용",/analogRead\(/),c("map 사용",/map\(/),c("setBrightness 사용",/\.setBrightness\(/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(21,"고급","[7차시] KNOB으로 켜지는 개수 조절","KNOB 값을 0~8로 변환해 그 개수만큼 네오픽셀이 왼쪽부터 켜지게 하세요. (볼륨 막대 효과)",S2,"변환한 값을 반복문의 횟수로 활용할 수 있다.","map(값,0,1023,0,8); 로 개수 구하기|clear(); 로 모두 끄기|for로 개수만큼 켜기|show();",[...NP,c("map 0~8 변환",/map\(\s*\w+\s*,\s*0\s*,\s*1023\s*,\s*0\s*,\s*8\s*\)/),c("for 반복문 사용",/for\s*\(\s*int\s/),c("clear() 사용",/\.clear\(\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(22,"기초","[8차시] 조도 값 읽기","LDR(조도 센서) 값을 읽어 시리얼 모니터에 출력하세요. 손으로 가렸을 때 값이 어떻게 변하는지 관찰합니다.",S1,"센서의 아날로그 값 변화로 작동 원리를 설명할 수 있다.","LDR 핀(A0)을 const int로 선언|analogRead로 값 읽기|Serial.println(값); 출력, delay(200);",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
+Q(23,"중급","[8차시] 어두우면 켜지는 LED","기준값을 변수로 정하고, LDR 값이 기준보다 낮으면(어두우면) 네오픽셀을 켜고 아니면 끄세요.",S2,"기준값을 이용한 조건 제어를 구현할 수 있다.","기준값 변수 선언|analogRead로 조도 읽기|if (조도 < 기준)이면 켜기, else 끄기|show();",[...NP,c("기준값 변수 선언",/(const\s+)?int\s+\w*(th|limit|dark|기준)\w*\s*=\s*\d+|(const\s+)?int\s+\w+\s*=\s*\d{2,4}\s*;/i),c("analogRead 사용",/analogRead\(/),c("조건문 if / else",/if\s*\([^)]*<[^)]*\)[\s\S]*else/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(24,"고급","[8차시] 스마트 가로등","주변이 어두울수록 네오픽셀이 더 밝게 켜지도록 하세요. (조도 값 → 밝기 값을 거꾸로 map)",S2,"센서 값을 반비례로 변환해 자동 제어 시스템을 만들 수 있다.","조도 읽기|map(값, 0, 1023, 255, 0);|setBrightness 적용|8개 모두 켜고 show();",[...NP,c("analogRead 사용",/analogRead\(/),c("거꾸로 map (255→0)",/map\([^)]*,\s*255\s*,\s*0\s*\)/),c("setBrightness 사용",/\.setBrightness\(/),c("for 반복문 사용",/for\s*\(\s*int\s/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(25,"기초","[9차시] 소리 크기 읽기","마이크(MIC) 값을 읽어 시리얼 모니터에 출력하세요. 박수를 칠 때 값의 변화를 관찰합니다.",S1,"소리 센서의 입력 값을 확인할 수 있다.","MIC 핀(A4)을 const int로 선언|analogRead로 값 읽기|Serial.println(값); 출력, delay(100);",[c("Serial.begin 호출",/Serial\.begin\(/),c("analogRead 사용",/analogRead\(/),c("값 출력",/Serial\.print(ln)?\(\s*\w+\s*\)/),c("delay 사용",/delay\(/)]),
+Q(26,"중급","[9차시] 박수 경보기","소리 값이 기준값보다 크면 부저가 울리고, 아니면 멈추게 하세요.",S2,"센서 값에 따라 부저를 제어하는 경보기를 만들 수 있다.","기준값 변수 선언|analogRead로 소리 읽기|if 크면 tone(3, 주파수);|else noTone(3);",[c("analogRead 사용",/analogRead\(/),c("if 조건문",/if\s*\([^)]*>[^)]*\)/),c("tone() 사용",/tone\(/),c("noTone() 사용",/noTone\(/)]),
+Q(27,"고급","[9차시] 박수 횟수 세기","박수 소리가 감지될 때마다 count를 1 늘려 시리얼 모니터에 출력하세요. 한 번의 박수가 여러 번 세어지지 않도록 delay를 넣으세요.",S2,"한 번의 입력을 한 번만 세도록 처리할 수 있다.","count 변수 선언|analogRead로 소리 읽기|기준 초과 시 count++; 로 1 증가|delay(300); 로 중복 방지, 출력",[c("count 변수 선언",/int\s+count\s*=\s*0/),c("analogRead 사용",/analogRead\(/),c("count 1 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("if 조건문",/\bif\s*\(/),c("delay 사용",/delay\(/),c("count 출력",/Serial\.print(ln)?\(\s*count\s*\)/)]),
+Q(28,"기초","[10차시] 조이스틱 X·Y 읽기","조이스틱의 X축, Y축 값을 함께 읽어 시리얼 모니터에 출력하세요.",S1,"2차원 좌표 입력의 원리를 설명할 수 있다.","X, Y 핀(A2, A3)을 const int로 선언|analogRead(핀); 2번|X와 Y를 한 줄에 출력|delay(200);",[c("Serial.begin 호출",/Serial\.begin\(/),{label:"analogRead 2번 이상",test:cnt(/analogRead\(/g,2)},{label:"Serial.print 2번 이상",test:cnt(/Serial\.print/g,2)},c("delay 사용",/delay\(/)]),
+Q(29,"중급","[10차시] 조이스틱으로 LED 이동","조이스틱을 좌우로 움직이면 불이 켜진 네오픽셀 위치(pos)가 한 칸씩 이동하게 하세요. 0~7 범위를 벗어나지 않게 합니다.",S2,"입력값으로 위치 변수를 바꾸고 범위를 제한할 수 있다.","pos 변수 선언|X값이 크면 pos 증가, 작으면 pos 감소|범위 제한(constrain 또는 if)|clear(); 후 pos 위치만 켜기",[...NP,c("pos 변수",/int\s+pos\s*=/),c("analogRead 사용",/analogRead\(/),c("pos 증가/감소",/pos\s*(\+\+|--|\+=|-=)|pos\s*=\s*pos\s*[+-]/),c("범위 제한",/constrain\(|pos\s*[<>]=?\s*\d/),c("setPixelColor(pos…)",/setPixelColor\(\s*pos\s*,/)]),
+Q(30,"고급","[10차시] 위치 이동 + 색 바꾸기","조이스틱(A2, A3)으로 불빛을 좌우로 이동시키고, K1 버튼(D4)을 누를 때마다 색이 빨강→초록→파랑으로 바뀌게 하세요. (FND/Button 선택 스위치는 Button 쪽으로)",S2,"아날로그·디지털 입력을 함께 사용해 인터랙티브 시스템을 구현할 수 있다.","K1 핀(D4) 입력 설정|색 번호 변수(colorIdx) 선언|K1이 눌리면 colorIdx 변경|pos 위치에 해당 색으로 켜기",[...NP,c("버튼 입력 설정",/pinMode\([^)]*INPUT/),c("digitalRead 사용",/digitalRead\(/),c("analogRead 사용",/analogRead\(/),c("색 번호 변수",/int\s+color\w*\s*=/i),{label:"색 3가지 사용(빨강·초록·파랑)",test:code=>/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/.test(code)&&/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/.test(code)&&/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/.test(code)}]),
+Q(31,"기초","[11차시] 라이브러리로 DHT11 준비","DHT 센서 라이브러리를 포함하고, 객체를 선언한 뒤 setup()에서 시작하세요. (DHT11 = D12)",S1,"외부 라이브러리를 포함하고 객체를 초기화할 수 있다.","#include로 DHT 라이브러리 포함|DHT dht(12, DHT11); 선언|setup()에서 dht.begin();",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("DHT 객체 선언(DHT11)",/DHT\s+\w+\s*\([^)]*DHT11\s*\)/),c("begin() 호출",/\w+\.begin\(\s*\)/)]),
+Q(32,"중급","[11차시] 현재 온도 출력","DHT11으로 온도를 읽어 시리얼 모니터에 출력하세요. (측정 간격은 2초 이상)",S2,"센서 라이브러리 함수로 측정값을 읽을 수 있다.","DHT 초기화|readTemperature(); 로 온도 읽기|Serial.println(값); 출력|delay(2000);",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("readTemperature 사용",/\.readTemperature\(/),c("Serial 출력",/Serial\.print/),c("delay 2000 이상",/delay\(\s*([2-9]\d{3}|\d{5,})\s*\)/)]),
+Q(33,"고급","[11차시] 온습도 읽고 오류 처리","온도와 습도를 모두 읽고, isnan()으로 읽기 실패를 확인하세요. 온도가 28도 이상이면 ‘HOT’을 출력하세요.",S2,"측정 오류를 처리하고 조건에 따라 판단할 수 있다.","readTemperature(); readHumidity(); 호출|isnan으로 실패 확인|if (온도 >= 28) 이면 HOT 출력|값 출력",[c("readTemperature 사용",/\.readTemperature\(/),c("readHumidity 사용",/\.readHumidity\(/),c("isnan 사용",/isnan\(/),c("if 조건문",/\bif\s*\(/),c("‘HOT’ 출력",/"HOT"/)]),
+Q(34,"기초","[12차시] 7세그먼트에 1234 출력","4자리 디스플레이 라이브러리를 포함하고 객체를 만든 뒤 숫자 1234를 표시하세요. (FND = D4, D5)",S1,"FND 디스플레이의 구조를 이해하고 숫자를 출력할 수 있다.","디스플레이 라이브러리 포함|FND 핀(D4, D5) 선언 후 객체 생성|밝기 설정|1234 표시",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("디스플레이 객체 선언",/TM1637\w*\s+\w+\s*\(/),c("숫자 출력 함수 호출",/\.(showNumberDec\w*|display)\(/),c("1234 사용",/\b1234\b/)]),
+Q(35,"중급","[12차시] 1초마다 올라가는 숫자","디스플레이에 0부터 시작해 1초마다 1씩 커지는 숫자를 표시하세요. 9999 다음에는 0으로 돌아갑니다.",S2,"변수 값을 디스플레이로 출력하고 범위를 제한할 수 있다.","count 변수 선언|디스플레이에 count 표시|count 1 증가, 9999 초과 시 0|delay(1000);",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("count 변수",/int\s+count\s*=\s*0/),c("count 증가",/count\s*\+\+|count\s*\+=\s*1|count\s*=\s*count\s*\+\s*1/),c("9999 범위 처리",/9999/),c("delay(1000)",/delay\(\s*1000\s*\)/)]),
+Q(36,"고급","[12차시] 조이스틱으로 증가 / 감소","조이스틱(A2 또는 A3)을 한쪽으로 밀면 숫자가 1 증가, 반대쪽으로 밀면 1 감소하며 FND에 표시하세요. (0~9999 유지) ※ FND(D4, D5)와 K1·K2 버튼은 같은 핀이라 함께 쓸 수 없어요.",S2,"입력 장치와 출력 장치를 연결한 시스템을 구현할 수 있다.","조이스틱 한 축 읽기|값이 크면 count++; 작으면 count--;|범위 제한(constrain 또는 if)|FND에 표시",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("analogRead 사용",/analogRead\(/),c("증가 사용",/\+\+|\+=\s*1/),c("감소 사용",/--|-=\s*1/),c("범위 제한",/constrain\(|count\s*[<>]=?\s*\d/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/)]),
+Q(37,"기초","[13차시] 온도를 디스플레이에 표시","DHT11으로 읽은 온도를 7세그먼트 디스플레이에 표시하세요.",S1,"센서 데이터를 시각화 장치로 출력할 수 있다.","DHT와 디스플레이 라이브러리 포함|readTemperature로 읽기|정수로 바꿔 표시|delay(2000);",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("readTemperature 사용",/\.readTemperature\(/),c("디스플레이 출력",/\.(showNumberDec\w*|display)\(/)]),
+Q(38,"중급","[13차시] 온도·습도 번갈아 표시","3초마다 온도와 습도가 번갈아 디스플레이에 표시되게 하세요.",S2,"데이터를 시간 간격에 따라 순차적으로 시각화할 수 있다.","온도 읽어 표시|delay(3000);|습도 읽어 표시|delay(3000);",[c("readTemperature 사용",/\.readTemperature\(/),c("readHumidity 사용",/\.readHumidity\(/),{label:"디스플레이 출력 2번 이상",test:cnt(/\.(showNumberDec\w*|display)\(/g,2)},{label:"3초 대기 2번 이상",test:cnt(/delay\(\s*3000\s*\)/g,2)}]),
+Q(39,"고급","[13차시] KNOB으로 온도/습도 전환","KNOB(A1) 값이 512 미만이면 온도, 512 이상이면 습도를 FND에 표시하세요.",S2,"아날로그 입력으로 표시 모드를 전환하는 프로그램을 설계할 수 있다.","KNOB 값 읽기|if (값 < 512) 이면 온도 표시|else 습도 표시|FND에 출력",[c("DHT 라이브러리 포함",/#include\s*[<"]DHT\w*\.h[>"]/),c("analogRead 사용",/analogRead\(/),c("온도·습도 모두 사용",/readTemperature\([\s\S]*readHumidity\(|readHumidity\([\s\S]*readTemperature\(/),c("if / else 사용",/if\s*\([\s\S]*else/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/)]),
+Q(40,"기초","[14차시] 리모컨 신호 받기","적외선 수신 라이브러리를 시작하고, 리모컨 버튼을 누르면 수신 여부를 시리얼 모니터에 출력하세요. (IR 수신 = D2)",S1,"적외선 통신의 수신 과정을 설명할 수 있다.","IRremote 라이브러리 포함|수신기 시작(D2)|decode()로 신호 확인|Serial 출력",[c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("Serial.begin 호출",/Serial\.begin\(/),c("decode 사용",/\.decode\(/),c("Serial 출력",/Serial\.print/)]),
+Q(41,"중급","[14차시] 버튼 코드값 확인","리모컨 버튼의 고유 코드를 16진수(HEX)로 시리얼 모니터에 출력하세요.",S2,"수신한 데이터를 16진수로 확인하고 해석할 수 있다.","신호 수신(decode)|수신값을 HEX 형식으로 출력|다음 신호 받을 준비(resume();)",[c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("decode 사용",/\.decode\(/),c("HEX 형식 출력",/Serial\.print(ln)?\([^;]*,\s*HEX\s*\)/),c("수신 재개(resume)",/\.resume\(/)]),
 Q(42,"고급","[14차시] 숫자 버튼 → 디스플레이","리모컨의 숫자 버튼(최소 3개)을 누르면 해당 숫자가 디스플레이에 표시되게 하세요. 코드값을 직접 확인해 사용합니다.",S2,"분석한 코드값으로 입력을 구분하고 출력에 연결할 수 있다.","각 버튼의 HEX 코드값 확인|if 또는 switch로 구분|해당 숫자를 디스플레이에 표시",[c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),{label:"HEX 코드값 3개 이상 사용",test:cnt(/0x[0-9a-fA-F]+/g,3)},c("if 또는 switch 사용",/\bif\s*\(|switch\s*\(/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/)]),
-Q(43,"기초","[15차시] 1번 버튼 → 빨간 불","리모컨 1번 버튼을 누르면 네오픽셀이 빨간색으로 켜지게 하세요.",S1,"무선 입력으로 출력 장치를 제어할 수 있다.","IR 수신 + 네오픽셀 초기화|1번 버튼 코드로 if 비교|빨강 켜고 show()",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("decode 사용",/\.decode\(/),c("HEX 코드값 비교",/0x[0-9a-fA-F]+/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
-Q(44,"중급","[15차시] 버튼별 색 바꾸기","1번은 빨강, 2번은 파랑, 3번은 끄기가 되도록 리모컨 버튼 3개를 구분해 제어하세요.",S2,"여러 무선 입력을 구분해 시스템을 제어할 수 있다.","버튼 3개의 코드값 확인|if / else if로 구분|색 켜기 또는 clear()|show()",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),{label:"HEX 코드값 3개 이상 사용",test:cnt(/0x[0-9a-fA-F]+/g,3)},c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("파랑 Color(0,0,255)",/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/),c("끄기(clear 또는 0,0,0)",/\.clear\(\s*\)|Color\(\s*0\s*,\s*0\s*,\s*0\s*\)/)]),
-Q(45,"고급","[15차시] 스마트 홈: 부저 토글","리모컨 버튼 하나를 누를 때마다 부저가 켜짐 ↔ 꺼짐으로 바뀌고, 다른 버튼으로 네오픽셀 색을 바꾸는 무선 제어 시스템을 만드세요.",S2,"상태 변수로 장치를 켜고 끄는 무선 제어 프로토타입을 구현할 수 있다.","부저 상태 변수(bool) 선언|토글 버튼: 상태를 반대로 바꾸기|상태에 따라 tone() / noTone()|다른 버튼으로 네오픽셀 색 변경",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("상태 변수(bool)",/(bool|boolean)\s+\w+\s*=/),c("상태 반전(!)",/(\w+)\s*=\s*!\s*\1/),c("tone() 사용",/tone\(/),c("noTone() 사용",/noTone\(/),{label:"HEX 코드값 2개 이상 사용",test:cnt(/0x[0-9a-fA-F]+/g,2)}]),
-Q(46,"기초","[16차시] 비밀번호 정하고 KNOB 읽기","비밀번호 상수(512)를 선언하고, KNOB 값을 읽어 시리얼 모니터에 출력하세요.",S1,"상수와 아날로그 입력을 이용해 금고 프로그램의 뼈대를 만들 수 있다.","const int PASSWORD = 512 선언|KNOB analogRead|값 출력, delay",[c("비밀번호 상수 512",/(const\s+int|#define)\s+\w+\s*=?\s*512/),c("analogRead 사용",/analogRead\(/),c("Serial 출력",/Serial\.print/),c("delay 사용",/delay\(/)]),
-Q(47,"중급","[16차시] 얼마나 가까운지 알려주기","KNOB 값과 비밀번호의 차이가 허용오차(예: 10) 이내이면 ‘CLOSE’, 아니면 ‘FAR’를 출력하세요. (abs 사용)",S2,"절댓값과 허용오차로 근접 여부를 판단할 수 있다.","차이 = abs(값 - PASSWORD)|허용오차 변수 선언|if 차이 <= 허용오차 → CLOSE|else → FAR",[c("analogRead 사용",/analogRead\(/),c("abs() 사용",/abs\(/),c("허용오차 변수",/(const\s+)?int\s+\w*(tol|range|gap|오차)\w*\s*=|<=?\s*\d+/i),c("if / else",/if\s*\([\s\S]*else/),c("CLOSE, FAR 출력",/"CLOSE"[\s\S]*"FAR"|"FAR"[\s\S]*"CLOSE"/)]),
-Q(48,"고급","[16차시] 디지털 금고 완성","K1을 누른 순간 KNOB 값이 비밀번호와 맞으면 네오픽셀 초록불(문 열림), 틀리면 빨간불과 부저 경고음이 나게 하세요.",S2,"입력 판단과 출력 장치를 결합한 보안 시스템을 구현할 수 있다.","K1 눌림 확인|abs로 비밀번호와 비교|맞으면 초록 켜기|틀리면 빨강 + tone()",[...NP,c("analogRead 사용",/analogRead\(/),c("digitalRead 사용",/digitalRead\(/),c("abs() 사용",/abs\(/),c("초록 Color(0,255,0)",/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("tone() 사용",/tone\(/)]),
-Q(49,"기초","[17차시] 30초 카운트다운","7세그먼트에 30부터 1초마다 1씩 줄어드는 숫자를 표시하세요.",S1,"디스플레이로 시간 변화를 표시할 수 있다.","timeLeft = 30 선언|디스플레이에 표시|timeLeft 1 감소, delay(1000)",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("30으로 시작",/int\s+\w+\s*=\s*30/),c("1 감소",/--|-=\s*1|=\s*\w+\s*-\s*1/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/),c("delay(1000)",/delay\(\s*1000\s*\)/)]),
-Q(50,"중급","[17차시] 시간 종료 처리","카운트다운이 0이 되면 부저를 울리고 더 이상 줄어들지 않게(게임 종료) 하세요.",S2,"종료 조건과 상태 변수를 이용해 게임 흐름을 제어할 수 있다.","timeLeft, gameOver 변수|0이 되면 gameOver = true|게임 종료 시 tone()|종료 후 감소 중지",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("종료 상태 변수",/(bool|boolean)\s+\w+\s*=\s*false/),c("0 이하 판정",/<=\s*0|==\s*0/),c("tone() 사용",/tone\(/),c("if 조건문",/\bif\s*\(/)]),
-Q(51,"고급","[17차시] 조이스틱 순발력 게임","30초 안에 조이스틱을 왼쪽 끝으로 민 뒤 K1을 누르면 성공(초록), 시간 안에 못 하면 실패(빨강)가 되는 미션 게임을 만드세요.",S2,"시간·조이스틱·버튼을 종합한 인터랙티브 게임을 구현할 수 있다.","카운트다운 표시|조이스틱 X값이 한쪽 끝인지 확인|그 상태에서 K1 눌림 확인|성공 초록 / 시간 종료 시 실패 빨강",[...NP,c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("analogRead 사용",/analogRead\(/),c("digitalRead 사용",/digitalRead\(/),c("논리 연산자(&&)",/&&/),c("초록 Color(0,255,0)",/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/)]),
+Q(43,"기초","[15차시] 1번 버튼 → 빨간 불","리모컨 1번 버튼을 누르면 네오픽셀이 빨간색으로 켜지게 하세요.",S1,"무선 입력으로 출력 장치를 제어할 수 있다.","IR 수신 + 네오픽셀 초기화|1번 버튼 코드로 if 비교|빨강 켜고 show();",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("decode 사용",/\.decode\(/),c("HEX 코드값 비교",/0x[0-9a-fA-F]+/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("show() 호출",/\.show\(\s*\)/)]),
+Q(44,"중급","[15차시] 버튼별 색 바꾸기","1번은 빨강, 2번은 파랑, 3번은 끄기가 되도록 리모컨 버튼 3개를 구분해 제어하세요.",S2,"여러 무선 입력을 구분해 시스템을 제어할 수 있다.","버튼 3개의 코드값 확인|if / else if로 구분|색 켜기 또는 clear();|show();",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),{label:"HEX 코드값 3개 이상 사용",test:cnt(/0x[0-9a-fA-F]+/g,3)},c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("파랑 Color(0,0,255)",/Color\(\s*0\s*,\s*0\s*,\s*255\s*\)/),c("끄기(clear 또는 0,0,0)",/\.clear\(\s*\)|Color\(\s*0\s*,\s*0\s*,\s*0\s*\)/)]),
+Q(45,"고급","[15차시] 스마트 홈: 부저 토글","리모컨 버튼 하나를 누를 때마다 부저가 켜짐 ↔ 꺼짐으로 바뀌고, 다른 버튼으로 네오픽셀 색을 바꾸는 무선 제어 시스템을 만드세요.",S2,"상태 변수로 장치를 켜고 끄는 무선 제어 프로토타입을 구현할 수 있다.","부저 상태 변수(bool) 선언|토글 버튼: 상태를 반대로 바꾸기|상태에 따라 tone(3, 주파수); / noTone(3);|다른 버튼으로 네오픽셀 색 변경",[...NP,c("IRremote 라이브러리 포함",/#include\s*[<"]IRremote\w*\.h[>"]/i),c("상태 변수(bool)",/(bool|boolean)\s+\w+\s*=/),c("상태 반전(!)",/(\w+)\s*=\s*!\s*\1/),c("tone() 사용",/tone\(/),c("noTone() 사용",/noTone\(/),{label:"HEX 코드값 2개 이상 사용",test:cnt(/0x[0-9a-fA-F]+/g,2)}]),
+Q(46,"기초","[16차시] 비밀번호 정하고 KNOB 읽기","비밀번호 상수(512)를 선언하고, KNOB 값을 읽어 시리얼 모니터에 출력하세요.",S1,"상수와 아날로그 입력을 이용해 금고 프로그램의 뼈대를 만들 수 있다.","const int PASSWORD = 512; 선언|analogRead(A1);|값 출력, delay(200);",[c("비밀번호 상수 512",/(const\s+int|#define)\s+\w+\s*=?\s*512/),c("analogRead 사용",/analogRead\(/),c("Serial 출력",/Serial\.print/),c("delay 사용",/delay\(/)]),
+Q(47,"중급","[16차시] 얼마나 가까운지 알려주기","KNOB 값과 비밀번호의 차이가 허용오차(예: 10) 이내이면 ‘CLOSE’, 아니면 ‘FAR’를 출력하세요. (abs 사용)",S2,"절댓값과 허용오차로 근접 여부를 판단할 수 있다.","int 차이 = abs(값 - PASSWORD);|허용오차 변수 선언|if 차이 <= 허용오차 → CLOSE|else → FAR",[c("analogRead 사용",/analogRead\(/),c("abs() 사용",/abs\(/),c("허용오차 변수",/(const\s+)?int\s+\w*(tol|range|gap|오차)\w*\s*=|<=?\s*\d+/i),c("if / else",/if\s*\([\s\S]*else/),c("CLOSE, FAR 출력",/"CLOSE"[\s\S]*"FAR"|"FAR"[\s\S]*"CLOSE"/)]),
+Q(48,"고급","[16차시] 디지털 금고 완성","K1을 누른 순간 KNOB 값이 비밀번호와 맞으면 네오픽셀 초록불(문 열림), 틀리면 빨간불과 부저 경고음이 나게 하세요.",S2,"입력 판단과 출력 장치를 결합한 보안 시스템을 구현할 수 있다.","K1 눌림 확인|abs로 비밀번호와 비교|맞으면 초록 켜기|틀리면 빨강 + tone(3, 주파수);",[...NP,c("analogRead 사용",/analogRead\(/),c("digitalRead 사용",/digitalRead\(/),c("abs() 사용",/abs\(/),c("초록 Color(0,255,0)",/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/),c("tone() 사용",/tone\(/)]),
+Q(49,"기초","[17차시] 30초 카운트다운","7세그먼트에 30부터 1초마다 1씩 줄어드는 숫자를 표시하세요.",S1,"디스플레이로 시간 변화를 표시할 수 있다.","int timeLeft = 30; 선언|디스플레이에 표시|timeLeft--; 로 1 감소, delay(1000);",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("30으로 시작",/int\s+\w+\s*=\s*30/),c("1 감소",/--|-=\s*1|=\s*\w+\s*-\s*1/),c("숫자 출력",/\.(showNumberDec\w*|display)\(/),c("delay(1000)",/delay\(\s*1000\s*\)/)]),
+Q(50,"중급","[17차시] 시간 종료 처리","카운트다운이 0이 되면 부저를 울리고 더 이상 줄어들지 않게(게임 종료) 하세요.",S2,"종료 조건과 상태 변수를 이용해 게임 흐름을 제어할 수 있다.","timeLeft, gameOver 변수|0이 되면 gameOver = true;|게임 종료 시 tone(3, 주파수);|종료 후 감소 중지",[c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("종료 상태 변수",/(bool|boolean)\s+\w+\s*=\s*false/),c("0 이하 판정",/<=\s*0|==\s*0/),c("tone() 사용",/tone\(/),c("if 조건문",/\bif\s*\(/)]),
+Q(51,"고급","[17차시] 조이스틱 순발력 게임","FND에 30초 카운트다운이 표시되는 동안 조이스틱(A2 또는 A3)을 한쪽 끝까지 민 뒤 반대쪽 끝까지 밀면 성공(초록), 시간이 끝나면 실패(빨강)가 되게 하세요.",S2,"시간과 조이스틱 입력을 종합한 게임을 구현할 수 있다.","카운트다운 FND 표시|한쪽 끝 도달 확인(예: 값 < 100)|그다음 반대쪽 끝 도달 확인(예: 값 > 900)|성공 초록 / 시간 종료 시 실패 빨강",[...NP,c("TM1637 라이브러리 포함",/#include\s*[<"]\w*TM1637\w*\.h[>"]/i),c("analogRead 사용",/analogRead\(/),{label:"if 조건문 2개 이상",test:cnt(/\bif\s*\(/g,2)},c("초록 Color(0,255,0)",/Color\(\s*0\s*,\s*255\s*,\s*0\s*\)/),c("빨강 Color(255,0,0)",/Color\(\s*255\s*,\s*0\s*,\s*0\s*\)/)]),
 Q(52,"기초","[18차시] 센서 2개 읽기 (설계)","팀 프로젝트의 첫걸음: 서로 다른 센서 입력 2개 이상을 읽어 시리얼 모니터에 함께 출력하세요. (예: LDR + MIC)",S2,"문제 해결에 필요한 입력 장치를 선택하고 읽을 수 있다.","프로젝트 주제와 사용할 센서 정하기|센서 핀을 const int로 선언|각 센서값 읽기|한 줄에 함께 출력",[c("Serial.begin 호출",/Serial\.begin\(/),{label:"센서 읽기 2번 이상",test:cnt(/analogRead\(|digitalRead\(/g,2)},{label:"Serial.print 2번 이상",test:cnt(/Serial\.print/g,2)},c("delay 사용",/delay\(/)]),
 Q(53,"중급","[18차시] 입력 → 판단 → 출력","센서값을 조건문으로 판단해, 서로 다른 출력 장치 2종(네오픽셀·부저·디스플레이 중)을 제어하는 프로그램을 설계하세요.",S2,"입력-처리-출력 구조로 시스템을 설계할 수 있다.","입력 센서 선택|기준값으로 상태 판단(if)|출력 장치 2종 제어",[c("센서 읽기",/analogRead\(|digitalRead\(/),c("if 조건문",/\bif\s*\(/),{label:"출력 장치 2종 이상",test:code=>[/Adafruit_NeoPixel/,/tone\(/,/TM1637/i].filter(r=>r.test(code)).length>=2}]),
-Q(54,"고급","[18차시] 기능별로 함수 나누기","읽기·판단·출력을 각각 사용자 정의 함수로 나누고 loop()에서 호출하세요. (함수 3개 이상)",S2,"기능을 함수로 분해해 구조적인 프로그램을 설계할 수 있다.","readSensor(), judge(), showResult() 같은 함수 만들기|각 함수에 한 가지 기능만 담기|loop()에서 순서대로 호출",[{label:"사용자 정의 함수 3개 이상(setup·loop 제외)",test:code=>(code.match(/\b(void|int|bool|boolean|float)\s+(?!setup\b|loop\b)\w+\s*\([^)]*\)\s*\{/g)||[]).length>=3},LOOP,c("센서 읽기",/analogRead\(|digitalRead\(/)]),
+Q(54,"고급","[18차시] 기능별로 함수 나누기","읽기·판단·출력을 각각 사용자 정의 함수로 나누고 loop()에서 호출하세요. (함수 3개 이상)",S2,"기능을 함수로 분해해 구조적인 프로그램을 설계할 수 있다.","readSensor(), judge(), showResult() 같은 함수 만들기|각 함수에 한 가지 기능만 담기|loop()에서 readSensor(); judge(); showResult(); 순서대로 호출",[{label:"사용자 정의 함수 3개 이상(setup·loop 제외)",test:code=>(code.match(/\b(void|int|bool|boolean|float)\s+(?!setup\b|loop\b)\w+\s*\([^)]*\)\s*\{/g)||[]).length>=3},LOOP,c("센서 읽기",/analogRead\(|digitalRead\(/)]),
 Q(55,"기초","[19차시] 상태 변수 만들기 (구현)","시스템의 상태(예: 평상시/경보)를 변수에 저장하고, 상태에 따라 네오픽셀 색이 바뀌게 하세요.",S2,"상태 변수로 시스템의 동작을 관리할 수 있다.","state 변수 선언|조건에 따라 state 변경|state에 따라 색 출력",[...NP,c("상태 변수",/(int|bool|boolean)\s+\w*(state|mode|status|alarm)\w*\s*=/i),c("if 조건문",/\bif\s*\(/),c("show() 호출",/\.show\(\s*\)/)]),
 Q(56,"중급","[19차시] 센서 두 개 함께 판단","서로 다른 센서 두 개의 조건을 &&(그리고) 또는 ||(또는)로 묶어 판단하고 결과를 출력하세요.",S2,"여러 센서를 융합해 더 정확한 판단을 할 수 있다.","센서 2개 읽기|논리 연산자로 조건 결합|참/거짓에 따라 출력",[{label:"센서 읽기 2번 이상",test:cnt(/analogRead\(|digitalRead\(/g,2)},c("논리 연산자(&& 또는 ||)",/&&|\|\|/),c("if 조건문",/\bif\s*\(/),c("출력 장치 또는 Serial 사용",/Serial\.print|tone\(|\.show\(|\.display\(|showNumberDec/)]),
 Q(57,"고급","[19차시] 종합 작품 완성","센서 2종 이상 + 출력 장치 2종 이상 + 사용자 정의 함수 + 조건문을 모두 사용한 나만의 스마트 시스템(독서실 스탠드, 층간소음 경보기 등)을 완성하세요.",S2,"실생활 문제를 해결하는 피지컬 컴퓨팅 시스템을 설계하고 구현할 수 있다.","문제 상황과 해결 방법 정하기|센서 2종 이상 입력|조건에 따른 판단|출력 장치 2종 이상 제어|기능을 함수로 정리",[{label:"센서 읽기 2번 이상",test:cnt(/analogRead\(|digitalRead\(/g,2)},c("사용자 정의 함수",/\b(void|int|bool)\s+(?!setup\b|loop\b)\w+\s*\([^)]*\)\s*\{/),c("if 조건문",/\bif\s*\(/),{label:"출력 장치 2종 이상",test:code=>[/Adafruit_NeoPixel/,/tone\(/,/TM1637/i,/Serial\.print/].filter(r=>r.test(code)).length>=2},c("setup/loop 구조",/void\s+setup\s*\(\s*\)[\s\S]*void\s+loop\s*\(\s*\)/)]),
-Q(58,"기초","[20차시] 시리얼로 디버깅하기","프로그램의 진행 상황과 센서값을 확인할 수 있도록 Serial.println 출력을 3곳 이상 넣으세요.",S1,"디버깅 도구로 프로그램의 동작을 점검할 수 있다.","Serial.begin 시작|센서값 출력|상태 변화 시 메시지 출력",[c("Serial.begin 호출",/Serial\.begin\(/),{label:"Serial.print 3번 이상",test:cnt(/Serial\.print/g,3)},c("센서 읽기",/analogRead\(|digitalRead\(/)]),
+Q(58,"기초","[20차시] 시리얼로 디버깅하기","프로그램의 진행 상황과 센서값을 확인할 수 있도록 Serial.println 출력을 3곳 이상 넣으세요.",S1,"디버깅 도구로 프로그램의 동작을 점검할 수 있다.","Serial.begin(9600); 시작|센서값 출력|상태 변화 시 메시지 출력",[c("Serial.begin 호출",/Serial\.begin\(/),{label:"Serial.print 3번 이상",test:cnt(/Serial\.print/g,3)},c("센서 읽기",/analogRead\(|digitalRead\(/)]),
 Q(59,"중급","[20차시] 상수로 코드 정리하기","핀 번호와 기준값을 const int(또는 #define)로 3개 이상 선언해 코드를 읽기 쉽게 고치세요. 코드 안에 직접 쓴 핀 번호는 줄입니다.",S2,"코드 리뷰를 통해 가독성을 높일 수 있다.","핀·기준값 목록 만들기|const int로 선언|코드의 숫자를 이름으로 바꾸기",[{label:"const int / #define 3개 이상",test:code=>((code.match(/const\s+int\s+\w+\s*=/g)||[]).length+(code.match(/#define\s+\w+\s+\S+/g)||[]).length)>=3},SETUP,LOOP]),
 Q(60,"고급","[20차시] millis()로 효율 높이기","delay() 대신 millis()로 시간을 재서, 한 가지 동작이 멈추지 않고 두 가지 일을 동시에 처리하게 개선하세요. (예: 1초마다 숫자 증가 + 버튼 즉시 반응)",S2,"알고리즘의 효율성을 비교하고 개선할 수 있다.","unsigned long 변수로 이전 시각 저장|millis() - 이전 시각 >= 간격 비교|조건 만족 시 동작·이전 시각 갱신|다른 입력도 매 루프 확인",[c("millis() 사용",/millis\(\s*\)/),c("unsigned long 변수",/unsigned\s+long\s+\w+/),c("시간 차이 비교",/millis\(\s*\)\s*-\s*\w+\s*>=?|\w+\s*=\s*millis\(\s*\)/),c("다른 입력 읽기",/digitalRead\(|analogRead\(/),{label:"delay 사용 안 함",test:code=>!/delay\(/.test(code)}])
 ];
+
+const _pc=(ns,label,test)=>ns.forEach(n=>QUESTIONS[n-1].checks.push({label,test}));
+_pc([13,14,15,26,45,48,50],"부저 핀 D3 사용",c=>PIN.ok(c,"tone",["3"]));
+_pc([16,17,18,19,20,21,39,46,47,48],"KNOB(A1) 읽기",c=>PIN.ok(c,"analogRead",PIN.an(1)));
+_pc([22,23,24],"조도센서(A0) 읽기",c=>PIN.ok(c,"analogRead",PIN.an(0)));
+_pc([25,26,27],"소리센서(A4) 읽기",c=>PIN.ok(c,"analogRead",PIN.an(4)));
+_pc([28],"조이스틱 A2 읽기",c=>PIN.ok(c,"analogRead",PIN.an(2)));
+_pc([28],"조이스틱 A3 읽기",c=>PIN.ok(c,"analogRead",PIN.an(3)));
+_pc([29,30,36,51],"조이스틱(A2 또는 A3) 읽기",c=>PIN.ok(c,"analogRead",[...PIN.an(2),...PIN.an(3)]));
+_pc([7,8,9,30,48],"K1 버튼(D4) 읽기",c=>PIN.ok(c,"digitalRead",["4"]));
+_pc([8,9],"K2 버튼(D5) 읽기",c=>PIN.ok(c,"digitalRead",["5"]));
+_pc([31,32,33,37,38,39],"DHT11 핀 D12",c=>PIN.args(c,"DHT")[0]==="12");
+_pc([34,35,36,37,38,39,42,49,50,51],"FND 핀 D4·D5",c=>{const a=PIN.args(c,"TM1637\\w*");return a.includes("4")&&a.includes("5");});
+_pc([40,41,42,43,44,45],"IR 수신 핀 D2",c=>PIN.ok(c,"begin",["2"])||PIN.ok(c,"IRrecv\\s+\\w+",["2"]));
+const _num=L=>L.filter(x=>/^\d+$/.test(x)).map(Number);
+const _rng=max=>["0~"+max+" 범위의 숫자가 3개 이상 출력됨",L=>{const n=_num(L);return n.length>=3&&n.every(v=>v<=max);}];
+QUESTIONS[0].serial=["‘Hello Arduino’가 시리얼 모니터에 출력됨",L=>L.some(x=>/^Hello Arduino$/i.test(x))];
+QUESTIONS[2].serial=["1씩 커지는 숫자가 연속으로 출력됨",L=>{const n=_num(L);for(let i=0;i+2<n.length;i++)if(n[i+1]===n[i]+1&&n[i+2]===n[i]+2)return true;return false;}];
+[15,21,24].forEach(i=>QUESTIONS[i].serial=_rng(1023));
+QUESTIONS[18].serial=_rng(255);
+QUESTIONS[16].serial=["LOW / MID / HIGH 중 하나가 출력됨",L=>L.some(x=>/^(LOW|MID|HIGH)$/.test(x))];
+QUESTIONS[46].serial=["CLOSE 또는 FAR가 출력됨",L=>L.some(x=>/^(CLOSE|FAR)$/.test(x))];
 
 /* ============ 상태 ============ */
 let state = load();
@@ -532,7 +581,7 @@ function renderQuestion(){
   $("qFirst").textContent=s.done?(s.first+"번째 제출"):"아직 미완성";
   $("btnPrev").disabled=state.cur===0;
   $("btnNext").disabled=state.cur===QUESTIONS.length-1;
-  showResult(s.last); box().value=s.code||""; setClearMsg("");
+  showResult(s.last); box().value=s.code||"void setup() {\n  \n}\n\nvoid loop() {\n  \n}\n"; window.refreshLines&&refreshLines(); setClearMsg("");
 }
 function showResult(last){
   const r=$("result"), c=$("checks");
@@ -580,19 +629,121 @@ function grade(q,code){
   const items=q.checks.map(c=>({label:c.label, ok: c.test? !!c.test(code) : c.re.test(code)}));
   return {pass:items.every(i=>i.ok),items};
 }
+/* ===== Web Serial ===== */
+const SER={port:null,reader:null,loop:null,on:false,buf:"",lines:[]};
+function serMsg(t,bad){const e=$("serStat");e.textContent=t;e.classList.toggle("on",!bad&&SER.on);}
+function serUi(){$("btnSerOn").disabled=SER.on;$("btnSerOff").disabled=!SER.on;$("serBaud").disabled=SER.on;serMsg(SER.on?"연결됨 ("+$("serBaud").value+" baud)":"연결 안 됨");}
+function serLines(){const lim=Date.now()-120000;return SER.lines.filter(l=>l.t>=lim).map(l=>l.s.trim()).filter(Boolean);}
+function serDraw(){const e=$("serLog");e.textContent=SER.lines.slice(-60).map(l=>l.s).join("\n");e.scrollTop=e.scrollHeight;}
+async function serRead(){
+  const dec=new TextDecoder();
+  while(SER.on&&SER.port&&SER.port.readable){
+    SER.reader=SER.port.readable.getReader();
+    try{
+      for(;;){
+        const {value,done}=await SER.reader.read(); if(done)break;
+        SER.buf+=dec.decode(value,{stream:true});
+        const parts=SER.buf.split(/\r?\n/); SER.buf=parts.pop();
+        parts.forEach(x=>SER.lines.push({t:Date.now(),s:x}));
+        if(SER.lines.length>300)SER.lines.splice(0,SER.lines.length-300);
+        serDraw();
+      }
+    }catch(e){ if(SER.on)serMsg("연결 오류: "+e.message,true); break; }
+    finally{ SER.reader.releaseLock(); }
+  }
+}
+async function serOn(){
+  if(!("serial" in navigator)){alert("이 브라우저는 Web Serial을 지원하지 않습니다. PC의 크롬 또는 엣지를 사용하세요.");return;}
+  try{
+    const port=await navigator.serial.requestPort();
+    await port.open({baudRate:parseInt($("serBaud").value,10)});
+    SER.port=port;SER.on=true;SER.buf="";SER.lines=[];serDraw();serUi();SER.loop=serRead();
+  }catch(e){ serMsg(e.name==="NotFoundError"?"포트 선택이 취소됐어요.":"연결 실패: "+e.message,true); }
+}
+async function serOff(){
+  SER.on=false;
+  try{ if(SER.reader) await SER.reader.cancel(); }catch(e){}
+  try{ await SER.loop; }catch(e){}
+  try{ if(SER.port) await SER.port.close(); }catch(e){}
+  SER.port=null;serUi();
+}
+$("btnSerOn").onclick=serOn; $("btnSerOff").onclick=serOff;
+$("btnSerClr").onclick=()=>{SER.lines=[];SER.buf="";serDraw();};
+if("serial" in navigator) navigator.serial.addEventListener("disconnect",()=>{ if(SER.on)serOff(); });
+function serialGrade(q,code,res){
+  if($("chkNoBoard").checked)return;
+  const plain=code.replace(/\/\*[\s\S]*?\*\//g,"").replace(/\/\/[^\n]*/g,"");
+  if(!/Serial\.print/.test(plain))return;
+  const L=serLines();
+  res.items.push({label:"보드에서 시리얼 출력 수신 ("+(SER.on?"연결됨":"연결 안 됨")+")",ok:L.length>0});
+  if(q.serial)res.items.push({label:q.serial[0],ok:L.length>0&&q.serial[1](L)});
+  res.pass=res.items.every(i=>i.ok);
+}
+/* ===== 코드 편집기 ===== */
+(function(){
+  const ta=$("codeBox"), ln=$("lineNo");
+  function nums(){const n=ta.value.split("\n").length;let t="";for(let i=1;i<=n;i++)t+=i+"\n";ln.textContent=t;ln.scrollTop=ta.scrollTop;}
+  window.refreshLines=nums;
+  ta.addEventListener("scroll",()=>{ln.scrollTop=ta.scrollTop;});
+  ta.addEventListener("input",nums);
+  function ins(t,back){
+    ta.focus();
+    if(!document.execCommand("insertText",false,t)){ta.setRangeText(t,ta.selectionStart,ta.selectionEnd,"end");ta.dispatchEvent(new Event("input"));}
+    if(back)ta.selectionStart=ta.selectionEnd=ta.selectionEnd-back;
+    nums();
+  }
+  const CLOSE={"(":")","[":"]","{":"}",'"':'"',"'":"'"};
+  ta.addEventListener("keydown",e=>{
+    if(e.isComposing||e.keyCode===229)return;
+    const v=ta.value, a=ta.selectionStart, b=ta.selectionEnd, prev=v[a-1], next=v[b];
+    if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();$("btnSubmit").click();return;}
+    if(e.key==="Tab"){
+      e.preventDefault();
+      if(e.shiftKey){
+        const ls=v.lastIndexOf("\n",a-1)+1, m=v.slice(ls).match(/^ {1,2}/);
+        if(m){ta.setSelectionRange(ls,ls+m[0].length);ins("");ta.selectionStart=ta.selectionEnd=Math.max(ls,a-m[0].length);}
+      }else ins("  ");
+      return;
+    }
+    if(e.key==="Enter"){
+      e.preventDefault();
+      const ls=v.lastIndexOf("\n",a-1)+1, ind=(v.slice(ls,a).match(/^[ \t]*/)||[""])[0];
+      if(prev==="{"&&next==="}")ins("\n"+ind+"  \n"+ind,ind.length+1);
+      else ins("\n"+ind+(prev==="{"?"  ":""));
+      return;
+    }
+    if(e.key==="Backspace"&&a===b&&CLOSE[prev]&&CLOSE[prev]===next){
+      e.preventDefault();ta.setSelectionRange(a-1,a+1);ins("");return;
+    }
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    if(Object.values(CLOSE).includes(e.key)&&a===b&&next===e.key){e.preventDefault();ta.selectionStart=ta.selectionEnd=a+1;return;}
+    if(CLOSE[e.key]){
+      e.preventDefault();
+      if(a!==b)ins(e.key+v.slice(a,b)+CLOSE[e.key]);
+      else if((e.key==='"'||e.key==="'")&&/\w/.test(prev||""))ins(e.key);
+      else ins(e.key+CLOSE[e.key],1);
+    }
+  });
+  $("btnTpl").onclick=()=>{
+    if(ta.value.trim()&&!confirm("입력한 코드가 사라집니다. 기본 틀로 바꿀까요?"))return;
+    ta.value="void setup() {\n  \n}\n\nvoid loop() {\n  \n}\n";
+    ta.dispatchEvent(new Event("input"));ta.focus();ta.setSelectionRange(16,16);nums();
+  };
+  nums();
+})();
 $("btnSubmit").onclick=()=>{
   if(!state.stuId.trim()||!state.stuName.trim()){alert("학번과 이름을 먼저 입력해 주세요.");return;}
   const q=QUESTIONS[state.cur], s=qs(q.id);
   const code=box().value.trim();
-  if(!code){alert("코드 입력창이 비어 있어요. 아두이노 IDE에서 완성한 스케치를 붙여넣은 뒤 다시 눌러 주세요.");return;}
+  if(!code){alert("코드 입력창이 비어 있어요. 코드를 입력한 뒤 다시 눌러 주세요.");return;}
   if(false){alert("\n위쪽에 'MakeCode 연결됨'이 보이는지 확인하고, 블록을 만든 뒤 다시 눌러 주세요.\n계속 안 되면 '편집기 새로고침'을 눌러 보세요.");return;}
-  const res=grade(q,code);
+  const res=grade(q,code); serialGrade(q,code,res);
   s.tries++; s.code=code; s.last={pass:res.pass,items:res.items,at:Date.now()};
   if(res.pass&&!s.done){s.done=true;s.first=s.tries;}
   save(); renderAll();
 };
 function setClearMsg(t,k){const m=$("clearMsg");m.textContent=t;m.style.color=k==="ok"?"var(--ok)":"var(--sub)";}
-$("btnClearBlocks").onclick=()=>{if(!confirm("입력한 코드를 모두 지울까요?"))return;box().value="";qs(QUESTIONS[state.cur].id).code="";save();setClearMsg("✔ 코드를 지웠어요.","ok");};
+$("btnClearBlocks").onclick=()=>{if(!confirm("입력한 코드를 모두 지울까요?"))return;box().value="void setup() {\n  \n}\n\nvoid loop() {\n  \n}\n";window.refreshLines&&refreshLines();qs(QUESTIONS[state.cur].id).code="";save();setClearMsg("✔ 코드를 지웠어요.","ok");};
 $("codeBox").addEventListener("input",e=>{qs(QUESTIONS[state.cur].id).code=e.target.value;save();});
 $("btnPrev").onclick=()=>{if(state.cur>0){state.cur--;save();renderAll();}};
 $("btnNext").onclick=()=>{if(state.cur<QUESTIONS.length-1){state.cur++;save();renderAll();}};
